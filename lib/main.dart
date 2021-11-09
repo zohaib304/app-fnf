@@ -1,6 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:firebase_core/firebase_core.dart';
+
+// local imports
+import "./Pages/error.dart";
+import "./Pages/main.dart";
 
 void main() {
+  WidgetsFlutterBinding.ensureInitialized();
   runApp(const MyApp());
 }
 
@@ -13,23 +19,33 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-      home: const MyHomePage(),
+      home: MyHomePage(),
     );
   }
 }
 
 class MyHomePage extends StatelessWidget {
-  const MyHomePage({Key? key}) : super(key: key);
+  MyHomePage({Key? key}) : super(key: key);
+
+  final Future<FirebaseApp> _initialization = Firebase.initializeApp();
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text("Take flight"),
-      ),
-      body: const Center(
-        child: Text("First Flight"),
-      ),
+    return FutureBuilder(
+      future: _initialization,
+      builder: (BuildContext context, AsyncSnapshot<FirebaseApp> snapshot) {
+        if (snapshot.hasError) {
+          return const Error();
+        }
+        if (snapshot.connectionState == ConnectionState.done) {
+          return const Main();
+        }
+        return const Scaffold(
+          body: Center(
+            child: CircularProgressIndicator(),
+          ),
+        );
+      },
     );
   }
 }
