@@ -3,7 +3,7 @@ import 'package:firebase_core/firebase_core.dart';
 
 // local imports
 import "./Pages/error.dart";
-import "./Pages/main.dart";
+import 'Pages/home.dart';
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();

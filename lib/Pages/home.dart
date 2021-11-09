@@ -1,3 +1,4 @@
+import 'package:android_app_fnf/Widgets/carousel_slider_main.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
@@ -42,15 +43,17 @@ class Main extends StatelessWidget {
           ),
           IconButton(
             icon: const Icon(
-              Icons.search,
-              color: Colors.black,
+              Icons.shopping_cart_outlined,
+              color: Colors.black87,
             ),
             onPressed: () {},
           ),
         ],
       ),
-      body: const Center(
-        child: Text("First Flight"),
+      body: SingleChildScrollView(
+        child: Column(
+          children: const [SizedBox(height: 10), CarouselSliderMain()],
+        ),
       ),
     );
   }
