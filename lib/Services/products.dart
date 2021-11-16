@@ -27,7 +27,6 @@ class Products with ChangeNotifier {
     );
   }
 
-
   // get product by id
   Stream<Product> getProductById(docId) {
     final documentReference =

@@ -3,10 +3,17 @@ import 'package:carousel_slider/carousel_slider.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 
-class ProductDetails extends StatelessWidget {
+class ProductDetails extends StatefulWidget {
   const ProductDetails({Key? key}) : super(key: key);
 
   static const routeName = '/product-detail';
+
+  @override
+  State<ProductDetails> createState() => _ProductDetailsState();
+}
+
+class _ProductDetailsState extends State<ProductDetails> {
+  late String shopName = '';
 
   @override
   Widget build(BuildContext context) {
@@ -38,6 +45,17 @@ class ProductDetails extends StatelessWidget {
                     .snapshots(),
                 builder: (context, AsyncSnapshot<DocumentSnapshot> snapshot) {
                   final product = snapshot.data;
+                  // FirebaseFirestore.instance
+                  //     .collection("suppliers")
+                  //     .doc(product!['supplier_id'])
+                  //     .get()
+                  //     .then((value) {
+                  //   if (mounted) {
+                  //     setState(() {
+                  //       shopName = value.data()!['shopName'];
+                  //     });
+                  //   }
+                  // });
                   if (snapshot.hasData) {
                     return SingleChildScrollView(
                       child: Column(
@@ -129,6 +147,42 @@ class ProductDetails extends StatelessWidget {
                               ],
                             ),
                           ),
+                          const SizedBox(height: 10),
+                          Container(
+                            padding: const EdgeInsets.symmetric(
+                                horizontal: 20.0, vertical: 10.0),
+                            width: double.infinity,
+                            color: Colors.white,
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                const Text(
+                                  "Sold By",
+                                  style: TextStyle(
+                                    fontSize: 12,
+                                    color: Colors.black87,
+                                  ),
+                                ),
+                                const SizedBox(height: 5),
+                                const Text(
+                                  "shopName",
+                                  style: TextStyle(
+                                    fontSize: 18,
+                                    color: Colors.black87,
+                                  ),
+                                ),
+                                const SizedBox(
+                                  height: 10,
+                                ),
+                                OutlinedButton(
+                                  onPressed: () {
+                                    // TODO: Navigate to shop page
+                                  },
+                                  child: const Text("Go to Store"),
+                                ),
+                              ],
+                            ),
+                          )
                         ],
                       ),
                     );
