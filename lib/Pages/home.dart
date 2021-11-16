@@ -87,10 +87,10 @@ class Home extends StatelessWidget {
                     itemBuilder: (context, index) {
                       return GestureDetector(
                         onTap: () {
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            SnackBar(
-                              content: Text(snapshot.data![index].id),
-                            ),
+                          Navigator.pushNamed(
+                            context,
+                            '/product-detail',
+                            arguments: snapshot.data![index].id,
                           );
                         },
                         child: Container(

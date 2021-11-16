@@ -1,3 +1,4 @@
+import 'package:android_app_fnf/Pages/product_details.dart';
 import 'package:android_app_fnf/Services/products.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -29,6 +30,9 @@ class MyApp extends StatelessWidget {
           primarySwatch: Colors.blue,
         ),
         home: MyHomePage(),
+        routes: {
+          ProductDetails.routeName: (context) => const ProductDetails(),
+        },
       ),
     );
   }
