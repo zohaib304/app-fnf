@@ -10,8 +10,8 @@ class CarouselSliderMain extends StatelessWidget {
       options: CarouselOptions(
         height: 150.0,
         enlargeCenterPage: true,
-        // TODO set to true on production
-        // autoPlay: true,
+        // TODO:
+        autoPlay: false,
         pageSnapping: true,
         scrollDirection: Axis.horizontal,
       ),
