@@ -1,5 +1,7 @@
 import 'package:android_app_fnf/Pages/product_details.dart';
+import 'package:android_app_fnf/Services/auth.dart';
 import 'package:android_app_fnf/Services/products.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:provider/provider.dart';
@@ -19,6 +21,12 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MultiProvider(
       providers: [
+        ChangeNotifierProvider<Auth>(
+          create: (context) => Auth(FirebaseAuth.instance),
+        ),
+        StreamProvider<User?>(
+            create: (context) => context.read<Auth>().authStateChanges,
+            initialData: null),
         ChangeNotifierProvider(
           create: (context) => Products(),
         ),
@@ -31,7 +39,7 @@ class MyApp extends StatelessWidget {
         ),
         home: MyHomePage(),
         routes: {
-          ProductDetails.routeName: (context) => ProductDetails(),
+          ProductDetails.routeName: (context) => const ProductDetails(),
         },
       ),
     );

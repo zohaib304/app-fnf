@@ -1,7 +1,13 @@
+import 'dart:developer';
+
+import 'package:android_app_fnf/Services/auth.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:google_sign_in/google_sign_in.dart';
+import 'package:provider/provider.dart';
 
 class ProductDetails extends StatefulWidget {
   const ProductDetails({Key? key}) : super(key: key);
@@ -18,7 +24,13 @@ class _ProductDetailsState extends State<ProductDetails> {
   @override
   Widget build(BuildContext context) {
     final productId = ModalRoute.of(context)!.settings.arguments as String;
-
+    final firebaseUser = context.watch<User?>();
+    if (firebaseUser != null) {
+      log("hello");
+    } else {
+      log("nah");
+    }
+    final signIn = Provider.of<Auth>(context);
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.white,
@@ -218,6 +230,14 @@ class _ProductDetailsState extends State<ProductDetails> {
               GestureDetector(
                 onTap: () {
                   // TODO:
+                  // signIn.signOut().then((value) {
+                  //   ScaffoldMessenger.of(context).showSnackBar(
+                  //     const SnackBar(
+                  //       behavior: SnackBarBehavior.floating,
+                  //       content: Text("You're now logged out"),
+                  //     ),
+                  //   );
+                  // });
                 },
                 child: Column(
                   mainAxisSize: MainAxisSize.min,
@@ -233,6 +253,83 @@ class _ProductDetailsState extends State<ProductDetails> {
                 ),
                 onPressed: () {
                   // TODO:
+                  if (firebaseUser == null) {
+                    showModalBottomSheet(
+                      context: context,
+                      builder: (context) {
+                        return SizedBox(
+                          height: 300,
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              const Text(
+                                "Please login first to add to cart",
+                                style: TextStyle(
+                                  fontSize: 20,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                              const SizedBox(
+                                height: 10,
+                              ),
+                              ElevatedButton(
+                                child: const Text("Sign in with Google"),
+                                onPressed: () async {
+                                  // TODO:
+                                  try {
+                                    // Trigger the authentication flow
+                                    final GoogleSignInAccount? googleUser =
+                                        await GoogleSignIn().signIn();
+
+                                    // Obtain the auth details from the request
+                                    final GoogleSignInAuthentication?
+                                        googleAuth =
+                                        await googleUser?.authentication;
+
+                                    // Create a new credential
+                                    final credential =
+                                        GoogleAuthProvider.credential(
+                                      accessToken: googleAuth?.accessToken,
+                                      idToken: googleAuth?.idToken,
+                                    );
+
+                                    // Once signed in, return the UserCredential
+                                    await FirebaseAuth.instance
+                                        .signInWithCredential(credential);
+
+                                    Navigator.pop(context);
+                                    ScaffoldMessenger.of(context).showSnackBar(
+                                      const SnackBar(
+                                        behavior: SnackBarBehavior.floating,
+                                        content:
+                                            Text("Successfully logged In."),
+                                      ),
+                                    );
+                                  } catch (e) {
+                                    log(e.toString());
+                                    log(e.toString());
+                                  }
+                                },
+                              ),
+                              TextButton(
+                                onPressed: () {
+                                  // pop if cancel
+                                  Navigator.pop(context);
+                                },
+                                child: const Text("Cancel"),
+                              ),
+                            ],
+                          ),
+                        );
+                      },
+                    );
+                  } else {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      const SnackBar(
+                        content: Text("You're good to go"),
+                      ),
+                    );
+                  }
                 },
                 icon: const Icon(Icons.shopping_cart_outlined),
                 label: const Text("Add to cart"),
