@@ -5,6 +5,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter/material.dart';
+import 'package:share_plus/share_plus.dart';
 
 class Home extends StatelessWidget {
   const Home({Key? key}) : super(key: key);
@@ -152,7 +153,11 @@ class Home extends StatelessWidget {
                                           ),
                                         ),
                                         IconButton(
-                                          onPressed: () {},
+                                          onPressed: () {
+                                            Share.share(
+                                              snapshot.data![index].name,
+                                            );
+                                          },
                                           icon: const Icon(
                                             Icons.share_outlined,
                                             size: 22,
