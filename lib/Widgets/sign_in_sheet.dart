@@ -52,7 +52,6 @@ class SignInSheet extends StatelessWidget {
                 ),
                 child: const Text("Sign in with Google"),
                 onPressed: () async {
-                  // TODO:
                   try {
                     // Trigger the authentication flow
                     final GoogleSignInAccount? googleUser =
