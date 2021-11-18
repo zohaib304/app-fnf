@@ -1,3 +1,4 @@
+import 'package:android_app_fnf/Models/cart.dart';
 import 'package:android_app_fnf/Pages/product_details.dart';
 import 'package:android_app_fnf/Services/auth.dart';
 import 'package:android_app_fnf/Services/products.dart';
@@ -35,7 +36,7 @@ class MyApp extends StatelessWidget {
         debugShowCheckedModeBanner: false,
         title: 'Flutter Demo',
         theme: ThemeData(
-          primarySwatch: Colors.blue,
+          primaryColor: const Color(0xffFF3E44),
         ),
         home: MyHomePage(),
         routes: {

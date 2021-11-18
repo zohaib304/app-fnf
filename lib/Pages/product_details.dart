@@ -6,6 +6,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:provider/provider.dart';
+import 'package:share_plus/share_plus.dart';
 
 class ProductDetails extends StatefulWidget {
   const ProductDetails({Key? key}) : super(key: key);
@@ -23,11 +24,6 @@ class _ProductDetailsState extends State<ProductDetails> {
   Widget build(BuildContext context) {
     final productId = ModalRoute.of(context)!.settings.arguments as String;
     final firebaseUser = context.watch<User?>();
-    if (firebaseUser != null) {
-      log("hello");
-    } else {
-      log("nah");
-    }
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.white,
@@ -54,17 +50,6 @@ class _ProductDetailsState extends State<ProductDetails> {
                     .snapshots(),
                 builder: (context, AsyncSnapshot<DocumentSnapshot> snapshot) {
                   final product = snapshot.data;
-                  // FirebaseFirestore.instance
-                  //     .collection("suppliers")
-                  //     .doc(product!['supplier_id'])
-                  //     .get()
-                  //     .then((value) {
-                  //   if (mounted) {
-                  //     setState(() {
-                  //       shopName = value.data()!['shopName'];
-                  //     });
-                  //   }
-                  // });
                   if (snapshot.hasData) {
                     return SingleChildScrollView(
                       child: Column(
@@ -140,7 +125,12 @@ class _ProductDetailsState extends State<ProductDetails> {
                                     ),
                                     TextButton(
                                       onPressed: () {},
-                                      child: const Text("COPY"),
+                                      child: Text(
+                                        "COPY",
+                                        style: TextStyle(
+                                          color: Theme.of(context).primaryColor,
+                                        ),
+                                      ),
                                     ),
                                   ],
                                 ),
@@ -184,10 +174,15 @@ class _ProductDetailsState extends State<ProductDetails> {
                                   height: 10,
                                 ),
                                 OutlinedButton(
+                                  style: OutlinedButton.styleFrom(
+                                    primary: Theme.of(context).primaryColor,
+                                  ),
                                   onPressed: () {
-                                    // TODO: Navigate to shop page
+                                    // TODO:
                                   },
-                                  child: const Text("Go to Store"),
+                                  child: const Text(
+                                    "GO TO STORE",
+                                  ),
                                 ),
                               ],
                             ),
@@ -207,129 +202,155 @@ class _ProductDetailsState extends State<ProductDetails> {
         ),
       ),
       bottomNavigationBar: BottomAppBar(
+        color: const Color(0xffF5F6F8),
         child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 40, vertical: 20),
+          padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 20),
           child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            mainAxisAlignment: MainAxisAlignment.spaceAround,
             children: [
-              GestureDetector(
-                onTap: () {
-                  // TODO
-                },
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  children: const [
-                    Icon(Icons.favorite_border_sharp),
-                    Text("Wishlist"),
-                  ],
+              Directionality(
+                textDirection: TextDirection.rtl,
+                child: ElevatedButton.icon(
+                  style: ElevatedButton.styleFrom(
+                    primary: Colors.white,
+                    elevation: 0,
+                    padding:
+                        const EdgeInsetsDirectional.fromSTEB(30, 10, 30, 10),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(50),
+                    ),
+                  ),
+                  onPressed: () {
+                    // TODO:
+                    Share.share("Product Name");
+                  },
+                  icon: Container(
+                    padding: const EdgeInsets.all(3),
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(50),
+                      color: Colors.grey[400],
+                    ),
+                    child: const Icon(
+                      Icons.arrow_upward,
+                      color: Colors.white,
+                    ),
+                  ),
+                  label: const Text(
+                    "SHARE THIS",
+                    style: TextStyle(
+                      color: Colors.black54,
+                    ),
+                  ),
                 ),
               ),
-              GestureDetector(
-                onTap: () {
-                  // TODO:
-                  // signIn.signOut().then((value) {
-                  //   ScaffoldMessenger.of(context).showSnackBar(
-                  //     const SnackBar(
-                  //       behavior: SnackBarBehavior.floating,
-                  //       content: Text("You're now logged out"),
-                  //     ),
-                  //   );
-                  // });
-                },
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  children: const [
-                    Icon(Icons.share_outlined),
-                    Text("Share"),
-                  ],
-                ),
-              ),
-              ElevatedButton.icon(
-                style: ElevatedButton.styleFrom(
-                  padding: const EdgeInsetsDirectional.fromSTEB(40, 10, 40, 10),
-                ),
-                onPressed: () {
-                  // TODO:
-                  if (firebaseUser == null) {
-                    showModalBottomSheet(
-                      context: context,
-                      builder: (context) {
-                        return SizedBox(
-                          height: 300,
-                          child: Column(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              const Text(
-                                "Please login first to add to cart",
-                                style: TextStyle(
-                                  fontSize: 20,
-                                  fontWeight: FontWeight.bold,
+              Directionality(
+                textDirection: TextDirection.rtl,
+                child: ElevatedButton.icon(
+                  style: ElevatedButton.styleFrom(
+                    primary: Theme.of(context).primaryColor,
+                    elevation: 0,
+                    padding:
+                        const EdgeInsetsDirectional.fromSTEB(30, 10, 30, 10),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(50),
+                    ),
+                  ),
+                  onPressed: () {
+                    // TODO:
+                    if (firebaseUser == null) {
+                      showModalBottomSheet(
+                        context: context,
+                        builder: (context) {
+                          return SizedBox(
+                            height: 300,
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                const Text(
+                                  "Please login first to add to cart",
+                                  style: TextStyle(
+                                    fontSize: 20,
+                                    fontWeight: FontWeight.bold,
+                                  ),
                                 ),
-                              ),
-                              const SizedBox(
-                                height: 10,
-                              ),
-                              ElevatedButton(
-                                child: const Text("Sign in with Google"),
-                                onPressed: () async {
-                                  // TODO:
-                                  try {
-                                    // Trigger the authentication flow
-                                    final GoogleSignInAccount? googleUser =
-                                        await GoogleSignIn().signIn();
+                                const SizedBox(
+                                  height: 10,
+                                ),
+                                ElevatedButton(
+                                  child: const Text("Sign in with Google"),
+                                  onPressed: () async {
+                                    // TODO:
+                                    try {
+                                      // Trigger the authentication flow
+                                      final GoogleSignInAccount? googleUser =
+                                          await GoogleSignIn().signIn();
 
-                                    // Obtain the auth details from the request
-                                    final GoogleSignInAuthentication?
-                                        googleAuth =
-                                        await googleUser?.authentication;
+                                      // Obtain the auth details from the request
+                                      final GoogleSignInAuthentication?
+                                          googleAuth =
+                                          await googleUser?.authentication;
 
-                                    // Create a new credential
-                                    final credential =
-                                        GoogleAuthProvider.credential(
-                                      accessToken: googleAuth?.accessToken,
-                                      idToken: googleAuth?.idToken,
-                                    );
+                                      // Create a new credential
+                                      final credential =
+                                          GoogleAuthProvider.credential(
+                                        accessToken: googleAuth?.accessToken,
+                                        idToken: googleAuth?.idToken,
+                                      );
 
-                                    // Once signed in, return the UserCredential
-                                    await FirebaseAuth.instance
-                                        .signInWithCredential(credential);
+                                      // Once signed in, return the UserCredential
+                                      await FirebaseAuth.instance
+                                          .signInWithCredential(credential);
 
+                                      Navigator.pop(context);
+                                      ScaffoldMessenger.of(context)
+                                          .showSnackBar(
+                                        const SnackBar(
+                                          behavior: SnackBarBehavior.floating,
+                                          content:
+                                              Text("Successfully logged In."),
+                                        ),
+                                      );
+                                    } catch (e) {
+                                      log(e.toString());
+                                      log(e.toString());
+                                    }
+                                  },
+                                ),
+                                TextButton(
+                                  onPressed: () {
+                                    // pop if cancel
                                     Navigator.pop(context);
-                                    ScaffoldMessenger.of(context).showSnackBar(
-                                      const SnackBar(
-                                        behavior: SnackBarBehavior.floating,
-                                        content:
-                                            Text("Successfully logged In."),
-                                      ),
-                                    );
-                                  } catch (e) {
-                                    log(e.toString());
-                                    log(e.toString());
-                                  }
-                                },
-                              ),
-                              TextButton(
-                                onPressed: () {
-                                  // pop if cancel
-                                  Navigator.pop(context);
-                                },
-                                child: const Text("Cancel"),
-                              ),
-                            ],
-                          ),
-                        );
-                      },
-                    );
-                  } else {
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      const SnackBar(
-                        content: Text("You're good to go"),
-                      ),
-                    );
-                  }
-                },
-                icon: const Icon(Icons.shopping_cart_outlined),
-                label: const Text("Add to cart"),
+                                  },
+                                  child: const Text("Cancel"),
+                                ),
+                              ],
+                            ),
+                          );
+                        },
+                      );
+                    } else {
+                      // TODO:
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        const SnackBar(
+                          behavior: SnackBarBehavior.floating,
+                          content: Text("Added to cart"),
+                        ),
+                      );
+                    }
+                  },
+                  icon: Container(
+                    padding: const EdgeInsets.all(3),
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(50),
+                      color: Colors.white,
+                    ),
+                    child: Icon(
+                      Icons.chevron_left,
+                      color: Theme.of(context).primaryColor,
+                    ),
+                  ),
+                  label: const Text("ADD TO CART"),
+                ),
               ),
             ],
           ),
