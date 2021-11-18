@@ -1,6 +1,7 @@
 import 'package:android_app_fnf/Pages/product_details.dart';
 import 'package:android_app_fnf/Pages/profile.dart';
 import 'package:android_app_fnf/Services/auth.dart';
+import 'package:android_app_fnf/Services/cart.dart';
 import 'package:android_app_fnf/Services/products.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -24,6 +25,9 @@ class MyApp extends StatelessWidget {
       providers: [
         ChangeNotifierProvider<Auth>(
           create: (context) => Auth(FirebaseAuth.instance),
+        ),
+        ChangeNotifierProvider(
+          create: (context) => Cart(),
         ),
         StreamProvider<User?>(
             create: (context) => context.read<Auth>().authStateChanges,

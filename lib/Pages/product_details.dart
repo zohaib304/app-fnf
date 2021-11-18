@@ -1,4 +1,5 @@
 import 'package:android_app_fnf/Models/product_argumets.dart';
+import 'package:android_app_fnf/Services/cart.dart';
 import 'package:android_app_fnf/Widgets/sign_in_sheet.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:carousel_slider/carousel_slider.dart';
@@ -26,6 +27,7 @@ class _ProductDetailsState extends State<ProductDetails> {
     final product =
         ModalRoute.of(context)!.settings.arguments as ProductArguments;
     final firebaseUser = context.watch<User?>();
+    final addToCart = Provider.of<Cart>(context);
     return Scaffold(
       backgroundColor: const Color(0xffF5F6F8),
       appBar: AppBar(
@@ -300,6 +302,13 @@ class _ProductDetailsState extends State<ProductDetails> {
                       );
                     } else {
                       // TODO:
+                      addToCart.addToCart(
+                          context,
+                          product.productId,
+                          product.name,
+                          product.price,
+                          product.supplierId,
+                          firebaseUser.uid);
                       ScaffoldMessenger.of(context).showSnackBar(
                         SnackBar(
                           behavior: SnackBarBehavior.floating,
