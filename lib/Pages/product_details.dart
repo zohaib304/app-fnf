@@ -302,19 +302,22 @@ class _ProductDetailsState extends State<ProductDetails> {
                       );
                     } else {
                       // TODO:
-                      addToCart.addToCart(
-                          context,
-                          product.productId,
-                          product.name,
-                          product.price,
-                          product.supplierId,
-                          firebaseUser.uid);
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        SnackBar(
-                          behavior: SnackBarBehavior.floating,
-                          content: Text(product.name),
-                        ),
-                      );
+                      addToCart
+                          .addToCart(
+                              context,
+                              product.productId,
+                              product.name,
+                              product.price,
+                              product.supplierId,
+                              firebaseUser.uid)
+                          .then((value) {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          const SnackBar(
+                            behavior: SnackBarBehavior.floating,
+                            content: Text("Product added to cart"),
+                          ),
+                        );
+                      });
                     }
                   },
                   icon: Container(
