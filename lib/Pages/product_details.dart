@@ -1,3 +1,4 @@
+import 'package:android_app_fnf/Models/product_argumets.dart';
 import 'package:android_app_fnf/Widgets/sign_in_sheet.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:carousel_slider/carousel_slider.dart';
@@ -22,7 +23,8 @@ class _ProductDetailsState extends State<ProductDetails> {
 
   @override
   Widget build(BuildContext context) {
-    final productId = ModalRoute.of(context)!.settings.arguments as String;
+    final product =
+        ModalRoute.of(context)!.settings.arguments as ProductArguments;
     final firebaseUser = context.watch<User?>();
     return Scaffold(
       backgroundColor: const Color(0xffF5F6F8),
@@ -47,7 +49,7 @@ class _ProductDetailsState extends State<ProductDetails> {
             StreamBuilder(
                 stream: FirebaseFirestore.instance
                     .collection('products')
-                    .doc(productId)
+                    .doc(product.productId)
                     .snapshots(),
                 builder: (context, AsyncSnapshot<DocumentSnapshot> snapshot) {
                   final product = snapshot.data;
@@ -220,8 +222,16 @@ class _ProductDetailsState extends State<ProductDetails> {
       ),
       bottomNavigationBar: BottomAppBar(
         color: const Color(0xffF5F6F8),
-        child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 20),
+        child: Container(
+          padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 15),
+          decoration: BoxDecoration(
+            border: Border(
+              top: BorderSide(
+                color: (Colors.grey[300])!,
+                width: 1,
+              ),
+            ),
+          ),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceAround,
             children: [
@@ -291,9 +301,9 @@ class _ProductDetailsState extends State<ProductDetails> {
                     } else {
                       // TODO:
                       ScaffoldMessenger.of(context).showSnackBar(
-                        const SnackBar(
+                        SnackBar(
                           behavior: SnackBarBehavior.floating,
-                          content: Text("Added to cart"),
+                          content: Text(product.name),
                         ),
                       );
                     }

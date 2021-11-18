@@ -1,4 +1,5 @@
 import 'package:android_app_fnf/Models/product.dart';
+import 'package:android_app_fnf/Models/product_argumets.dart';
 import 'package:android_app_fnf/Services/products.dart';
 import 'package:android_app_fnf/Widgets/carousel_slider_main.dart';
 import 'package:android_app_fnf/Widgets/sign_in_sheet.dart';
@@ -110,11 +111,13 @@ class Home extends StatelessWidget {
                     itemBuilder: (context, index) {
                       return GestureDetector(
                         onTap: () {
-                          Navigator.pushNamed(
-                            context,
-                            '/product-detail',
-                            arguments: snapshot.data![index].id,
-                          );
+                          Navigator.pushNamed(context, '/product-detail',
+                              arguments: ProductArguments(
+                                snapshot.data![index].id,
+                                snapshot.data![index].name,
+                                snapshot.data![index].price,
+                                snapshot.data![index].supplierId,
+                              ));
                         },
                         child: Container(
                           margin: const EdgeInsets.all(2),
