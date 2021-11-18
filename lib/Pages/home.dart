@@ -1,8 +1,12 @@
+import 'dart:developer';
+
 import 'package:android_app_fnf/Models/product.dart';
 import 'package:android_app_fnf/Services/products.dart';
 import 'package:android_app_fnf/Widgets/carousel_slider_main.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:carousel_slider/carousel_slider.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:google_sign_in/google_sign_in.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter/material.dart';
 import 'package:share_plus/share_plus.dart';
@@ -13,17 +17,88 @@ class Home extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final products = Provider.of<Products>(context, listen: false);
+    final firebaseUser = context.watch<User?>();
     return Scaffold(
       backgroundColor: const Color(0xffF5F6F8),
       appBar: AppBar(
         elevation: 0.5,
         backgroundColor: Colors.white,
         leading: IconButton(
-          icon: const Icon(
+          icon: Icon(
             Icons.account_circle,
-            color: Colors.black,
+            color: Colors.grey[600],
           ),
-          onPressed: () {},
+          onPressed: () {
+            if (firebaseUser == null) {
+              showModalBottomSheet(
+                context: context,
+                builder: (context) {
+                  return SizedBox(
+                    height: 300,
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        const Text(
+                          "Please login first to add to cart",
+                          style: TextStyle(
+                            fontSize: 20,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                        const SizedBox(
+                          height: 10,
+                        ),
+                        ElevatedButton(
+                          child: const Text("Sign in with Google"),
+                          onPressed: () async {
+                            // TODO:
+                            try {
+                              // Trigger the authentication flow
+                              final GoogleSignInAccount? googleUser =
+                                  await GoogleSignIn().signIn();
+
+                              // Obtain the auth details from the request
+                              final GoogleSignInAuthentication? googleAuth =
+                                  await googleUser?.authentication;
+
+                              // Create a new credential
+                              final credential = GoogleAuthProvider.credential(
+                                accessToken: googleAuth?.accessToken,
+                                idToken: googleAuth?.idToken,
+                              );
+
+                              // Once signed in, return the UserCredential
+                              await FirebaseAuth.instance
+                                  .signInWithCredential(credential);
+
+                              Navigator.pop(context);
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                const SnackBar(
+                                  behavior: SnackBarBehavior.floating,
+                                  content: Text("Successfully logged In."),
+                                ),
+                              );
+                            } catch (e) {
+                              log(e.toString());
+                            }
+                          },
+                        ),
+                        TextButton(
+                          onPressed: () {
+                            // pop if cancel
+                            Navigator.pop(context);
+                          },
+                          child: const Text("Cancel"),
+                        ),
+                      ],
+                    ),
+                  );
+                },
+              );
+            } else {
+              Navigator.pushNamed(context, '/profile');
+            }
+          },
         ),
         actions: [
           Column(
@@ -49,9 +124,9 @@ class Home extends StatelessWidget {
             ],
           ),
           IconButton(
-            icon: const Icon(
+            icon: Icon(
               Icons.shopping_cart_outlined,
-              color: Colors.black87,
+              color: Colors.grey[600],
             ),
             onPressed: () {},
           ),
