@@ -14,6 +14,7 @@ class Home extends StatelessWidget {
   Widget build(BuildContext context) {
     final products = Provider.of<Products>(context, listen: false);
     return Scaffold(
+      backgroundColor: const Color(0xffF5F6F8),
       appBar: AppBar(
         elevation: 0.5,
         backgroundColor: Colors.white,
@@ -97,6 +98,7 @@ class Home extends StatelessWidget {
                         child: Container(
                           margin: const EdgeInsets.all(2),
                           decoration: BoxDecoration(
+                            color: Colors.white,
                             borderRadius: BorderRadius.circular(5),
                             border: Border.all(
                               color: Colors.black12,
@@ -117,9 +119,15 @@ class Home extends StatelessWidget {
                                       return SizedBox(
                                         width:
                                             MediaQuery.of(context).size.width,
-                                        child: CachedNetworkImage(
-                                          imageUrl: i,
-                                          fit: BoxFit.cover,
+                                        child: ClipRRect(
+                                          borderRadius:
+                                              const BorderRadius.vertical(
+                                            top: Radius.circular(5),
+                                          ),
+                                          child: CachedNetworkImage(
+                                            imageUrl: i,
+                                            fit: BoxFit.cover,
+                                          ),
                                         ),
                                       );
                                     },

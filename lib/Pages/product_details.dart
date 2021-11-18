@@ -25,6 +25,7 @@ class _ProductDetailsState extends State<ProductDetails> {
     final productId = ModalRoute.of(context)!.settings.arguments as String;
     final firebaseUser = context.watch<User?>();
     return Scaffold(
+      backgroundColor: const Color(0xffF5F6F8),
       appBar: AppBar(
         backgroundColor: Colors.white,
         elevation: 0.5,
