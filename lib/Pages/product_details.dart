@@ -6,6 +6,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:share_plus/share_plus.dart';
+import 'package:flutter/services.dart';
 
 class ProductDetails extends StatefulWidget {
   const ProductDetails({Key? key}) : super(key: key);
@@ -86,7 +87,8 @@ class _ProductDetailsState extends State<ProductDetails> {
                                   product['productName'],
                                   maxLines: 2,
                                   style: const TextStyle(
-                                    color: Colors.black87,
+                                    fontWeight: FontWeight.bold,
+                                    color: Colors.black54,
                                   ),
                                 ),
                                 const SizedBox(height: 10),
@@ -124,12 +126,27 @@ class _ProductDetailsState extends State<ProductDetails> {
                                       ),
                                     ),
                                     TextButton(
-                                      onPressed: () {},
-                                      child: Text(
+                                      onPressed: () {
+                                        Clipboard.setData(
+                                          ClipboardData(
+                                            text: product['productDescription'],
+                                          ),
+                                        ).then((value) {
+                                          ScaffoldMessenger.of(context)
+                                              .showSnackBar(
+                                            const SnackBar(
+                                              behavior:
+                                                  SnackBarBehavior.floating,
+                                              content: Text("Copied."),
+                                            ),
+                                          );
+                                        });
+                                      },
+                                      style: TextButton.styleFrom(
+                                        primary: Theme.of(context).primaryColor,
+                                      ),
+                                      child: const Text(
                                         "COPY",
-                                        style: TextStyle(
-                                          color: Theme.of(context).primaryColor,
-                                        ),
                                       ),
                                     ),
                                   ],

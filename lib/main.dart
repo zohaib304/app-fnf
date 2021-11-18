@@ -1,4 +1,3 @@
-import 'package:android_app_fnf/Models/cart.dart';
 import 'package:android_app_fnf/Pages/product_details.dart';
 import 'package:android_app_fnf/Pages/profile.dart';
 import 'package:android_app_fnf/Services/auth.dart';
