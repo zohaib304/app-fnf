@@ -15,12 +15,15 @@ class ProductDetails extends StatefulWidget {
 
   static const routeName = '/product-detail';
 
+  // set loading to show loading indicator
+
   @override
   State<ProductDetails> createState() => _ProductDetailsState();
 }
 
 class _ProductDetailsState extends State<ProductDetails> {
   late String shopName = '';
+  bool _loading = false;
 
   @override
   Widget build(BuildContext context) {
@@ -284,42 +287,6 @@ class _ProductDetailsState extends State<ProductDetails> {
                       borderRadius: BorderRadius.circular(50),
                     ),
                   ),
-                  onPressed: () {
-                    // TODO:
-                    if (firebaseUser == null) {
-                      showModalBottomSheet(
-                        shape: const RoundedRectangleBorder(
-                          //the rounded corner is created here
-                          borderRadius: BorderRadius.only(
-                            topLeft: Radius.circular(20),
-                            topRight: Radius.circular(20),
-                          ),
-                        ),
-                        context: context,
-                        builder: (context) {
-                          return const SignInSheet();
-                        },
-                      );
-                    } else {
-                      // TODO:
-                      addToCart
-                          .addToCart(
-                              context,
-                              product.productId,
-                              product.name,
-                              product.price,
-                              product.supplierId,
-                              firebaseUser.uid)
-                          .then((value) {
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          const SnackBar(
-                            behavior: SnackBarBehavior.floating,
-                            content: Text("Product added to cart"),
-                          ),
-                        );
-                      });
-                    }
-                  },
                   icon: Container(
                     padding: const EdgeInsets.all(3),
                     decoration: BoxDecoration(
@@ -331,7 +298,68 @@ class _ProductDetailsState extends State<ProductDetails> {
                       color: Theme.of(context).primaryColor,
                     ),
                   ),
-                  label: const Text("ADD TO CART"),
+                  label: !_loading
+                      ? const Text("ADD TO CART")
+                      : const Text(
+                          "...ADDING",
+                          style: TextStyle(
+                            color: Colors.black54,
+                          ),
+                        ),
+                  onPressed: !_loading
+                      ? () {
+                          if (firebaseUser == null) {
+                            showModalBottomSheet(
+                              shape: const RoundedRectangleBorder(
+                                //the rounded corner is created here
+                                borderRadius: BorderRadius.only(
+                                  topLeft: Radius.circular(20),
+                                  topRight: Radius.circular(20),
+                                ),
+                              ),
+                              context: context,
+                              builder: (context) {
+                                return const SignInSheet();
+                              },
+                            );
+                          } else {
+                            try {
+                              // set _loading to true
+                              setState(() {
+                                _loading = true;
+                              });
+                              addToCart
+                                  .addToCart(
+                                      context,
+                                      product.productId,
+                                      product.name,
+                                      product.price,
+                                      product.supplierId,
+                                      firebaseUser.uid)
+                                  .then((value) {
+                                // set _loading to false
+                                setState(() {
+                                  _loading = false;
+                                });
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                  const SnackBar(
+                                    behavior: SnackBarBehavior.floating,
+                                    content: Text("Product added to cart"),
+                                  ),
+                                );
+                              });
+                            } catch (e) {
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                const SnackBar(
+                                  behavior: SnackBarBehavior.floating,
+                                  content: Text(
+                                      "Something went wrong please try later."),
+                                ),
+                              );
+                            }
+                          }
+                        }
+                      : null,
                 ),
               ),
             ],
