@@ -1,12 +1,10 @@
-import 'dart:developer';
-
 import 'package:android_app_fnf/Models/product.dart';
 import 'package:android_app_fnf/Services/products.dart';
 import 'package:android_app_fnf/Widgets/carousel_slider_main.dart';
+import 'package:android_app_fnf/Widgets/sign_in_sheet.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:google_sign_in/google_sign_in.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter/material.dart';
 import 'package:share_plus/share_plus.dart';
@@ -31,68 +29,16 @@ class Home extends StatelessWidget {
           onPressed: () {
             if (firebaseUser == null) {
               showModalBottomSheet(
+                shape: const RoundedRectangleBorder(
+                  //the rounded corner is created here
+                  borderRadius: BorderRadius.only(
+                    topLeft: Radius.circular(20),
+                    topRight: Radius.circular(20),
+                  ),
+                ),
                 context: context,
                 builder: (context) {
-                  return SizedBox(
-                    height: 300,
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        const Text(
-                          "Please login first to add to cart",
-                          style: TextStyle(
-                            fontSize: 20,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                        const SizedBox(
-                          height: 10,
-                        ),
-                        ElevatedButton(
-                          child: const Text("Sign in with Google"),
-                          onPressed: () async {
-                            // TODO:
-                            try {
-                              // Trigger the authentication flow
-                              final GoogleSignInAccount? googleUser =
-                                  await GoogleSignIn().signIn();
-
-                              // Obtain the auth details from the request
-                              final GoogleSignInAuthentication? googleAuth =
-                                  await googleUser?.authentication;
-
-                              // Create a new credential
-                              final credential = GoogleAuthProvider.credential(
-                                accessToken: googleAuth?.accessToken,
-                                idToken: googleAuth?.idToken,
-                              );
-
-                              // Once signed in, return the UserCredential
-                              await FirebaseAuth.instance
-                                  .signInWithCredential(credential);
-
-                              Navigator.pop(context);
-                              ScaffoldMessenger.of(context).showSnackBar(
-                                const SnackBar(
-                                  behavior: SnackBarBehavior.floating,
-                                  content: Text("Successfully logged In."),
-                                ),
-                              );
-                            } catch (e) {
-                              log(e.toString());
-                            }
-                          },
-                        ),
-                        TextButton(
-                          onPressed: () {
-                            // pop if cancel
-                            Navigator.pop(context);
-                          },
-                          child: const Text("Cancel"),
-                        ),
-                      ],
-                    ),
-                  );
+                  return const SignInSheet();
                 },
               );
             } else {
