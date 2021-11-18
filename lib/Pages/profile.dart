@@ -18,8 +18,15 @@ class Profile extends StatelessWidget {
           IconButton(
             icon: const Icon(Icons.power_settings_new),
             onPressed: () {
-              auth.signOut();
-              Navigator.pop(context);
+              auth.signOut().then((value) {
+                Navigator.pop(context);
+                ScaffoldMessenger.of(context).showSnackBar(
+                  const SnackBar(
+                    behavior: SnackBarBehavior.floating,
+                    content: Text('Signed out'),
+                  ),
+                );
+              });
             },
           ),
         ],
