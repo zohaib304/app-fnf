@@ -77,6 +77,37 @@ class Cart with ChangeNotifier {
     }
   }
 
+  // increase quantity of product in cart
+  Future<void> increaseQuantity(String productId) async {
+    CollectionReference cartRef = FirebaseFirestore.instance.collection('cart');
+    DocumentReference cartDocRef = cartRef.doc(productId);
+
+    // check if product already exists in cart
+    DocumentSnapshot cartDocSnapshot = await cartDocRef.get();
+    if (cartDocSnapshot.exists) {
+      // product already exists in cart
+      // update quantity
+      int quantity = (cartDocSnapshot.data() as dynamic)['quantity'];
+      await cartDocRef.update({
+        'quantity': quantity + 1,
+      }).then((value) => log('updated cart'));
+    }
+  }
+
+  // delete product from cart
+  Future<void> deleteFromCart(String productId) async {
+    CollectionReference cartRef = FirebaseFirestore.instance.collection('cart');
+    DocumentReference cartDocRef = cartRef.doc(productId);
+
+    // check if product already exists in cart
+    DocumentSnapshot cartDocSnapshot = await cartDocRef.get();
+    if (cartDocSnapshot.exists) {
+      // product already exists in cart
+      // remove product from cart
+      await cartDocRef.delete().then((value) => log('removed from cart'));
+    }
+  }
+
   // clear cart
   Future<void>? clearCart(String userId) async {
     CollectionReference cartRef = FirebaseFirestore.instance.collection('cart');
