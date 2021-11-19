@@ -36,7 +36,7 @@ class _ProductDetailsState extends State<ProductDetails> {
       appBar: AppBar(
         backgroundColor: Colors.white,
         elevation: 0.5,
-        iconTheme: const IconThemeData(color: Colors.black87),
+        iconTheme: IconThemeData(color: Colors.grey[600]),
         actions: [
           IconButton(
             icon: const Icon(Icons.search),
@@ -44,7 +44,9 @@ class _ProductDetailsState extends State<ProductDetails> {
           ),
           IconButton(
             icon: const Icon(Icons.shopping_cart_outlined),
-            onPressed: () {},
+            onPressed: () {
+              Navigator.of(context).pushNamed('/view-cart');
+            },
           ),
         ],
       ),

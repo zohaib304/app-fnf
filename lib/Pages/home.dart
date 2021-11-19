@@ -75,7 +75,25 @@ class Home extends StatelessWidget {
               Icons.shopping_cart_outlined,
               color: Colors.grey[600],
             ),
-            onPressed: () {},
+            onPressed: () {
+              if (firebaseUser == null) {
+                showModalBottomSheet(
+                  shape: const RoundedRectangleBorder(
+                    //the rounded corner is created here
+                    borderRadius: BorderRadius.only(
+                      topLeft: Radius.circular(20),
+                      topRight: Radius.circular(20),
+                    ),
+                  ),
+                  context: context,
+                  builder: (context) {
+                    return const SignInSheet();
+                  },
+                );
+              } else {
+                Navigator.pushNamed(context, '/view-cart');
+              }
+            },
           ),
         ],
       ),
