@@ -329,7 +329,14 @@ class ViewCart extends StatelessWidget {
                       color: Theme.of(context).primaryColor,
                     ),
                   ),
-                  label: const Text("CHECKOUT"),
+                  label: const Text(
+                    "PROCEED",
+                    style: TextStyle(
+                      fontSize: 18,
+                      // fontWeight: FontWeight.bold,
+                      letterSpacing: 0.8,
+                    ),
+                  ),
                   onPressed: () {},
                 ),
               ),
