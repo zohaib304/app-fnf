@@ -31,55 +31,9 @@ class ViewCart extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            // clear cart button
-            Container(
-              margin: const EdgeInsets.all(10),
-              child: ElevatedButton(
-                child: const Text(
-                  'Clear Cart',
-                  style: TextStyle(
-                    color: Colors.white,
-                  ),
-                ),
-                onPressed: () {
-                  getCartItems.clearCart(firebaseUser!.uid);
-                },
-              ),
-            ),
-            // total quantity of items in cart
-            StreamBuilder<int>(
-              stream: getCartItems.getTotalQuantity(firebaseUser!.uid),
-              builder: (context, snapshot) {
-                if (snapshot.hasData) {
-                  return Text(
-                    'Total Items: ${snapshot.data}',
-                    style: const TextStyle(
-                      fontSize: 20,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  );
-                }
-                if (snapshot.hasError) {
-                  return Text(
-                    'Error: ${snapshot.error}',
-                    style: const TextStyle(
-                      fontSize: 20,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  );
-                }
-                return const Text(
-                  'Total Items: 0',
-                  style: TextStyle(
-                    fontSize: 20,
-                    fontWeight: FontWeight.bold,
-                  ),
-                );
-              },
-            ),
             const SizedBox(height: 20),
             StreamBuilder<List<CartItem>>(
-              stream: getCartItems.getCartItems(firebaseUser.uid),
+              stream: getCartItems.getCartItems(firebaseUser!.uid),
               builder: (context, snapshot) {
                 if (snapshot.hasData) {
                   final cartItems = snapshot.data;
