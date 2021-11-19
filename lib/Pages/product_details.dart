@@ -348,12 +348,14 @@ class _ProductDetailsState extends State<ProductDetails> {
                               });
                               addToCart
                                   .addToCart(
-                                      context,
-                                      product.productId,
-                                      product.name,
-                                      product.price,
-                                      product.supplierId,
-                                      firebaseUser.uid)
+                                context,
+                                product.productId,
+                                product.name,
+                                product.price,
+                                product.supplierId,
+                                firebaseUser.uid,
+                                product.imageUrl,
+                              )
                                   .then((value) {
                                 // set _loading to false
                                 setState(() {

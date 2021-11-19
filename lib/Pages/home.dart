@@ -135,6 +135,7 @@ class Home extends StatelessWidget {
                                 snapshot.data![index].name,
                                 snapshot.data![index].price,
                                 snapshot.data![index].supplierId,
+                                snapshot.data![index].images[0],
                               ));
                         },
                         child: Container(

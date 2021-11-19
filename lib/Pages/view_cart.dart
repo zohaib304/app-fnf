@@ -1,7 +1,6 @@
-import 'dart:developer';
-
 import 'package:android_app_fnf/Models/cart_items.dart';
 import 'package:android_app_fnf/Services/cart.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -100,6 +99,12 @@ class ViewCart extends StatelessWidget {
                     itemBuilder: (context, index) {
                       final cartItem = cartItems[index];
                       return ListTile(
+                        leading: CircleAvatar(
+                          radius: 30,
+                          backgroundImage: CachedNetworkImageProvider(
+                            cartItem.image,
+                          ),
+                        ),
                         title: Text(cartItem.name),
                         subtitle: Text(cartItem.price.toString() +
                             '    -    Qty ' +

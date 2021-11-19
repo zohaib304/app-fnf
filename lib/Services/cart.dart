@@ -5,9 +5,8 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 
 class Cart with ChangeNotifier {
-
   Future<void> addToCart(BuildContext context, String productId, String name,
-      double price, String supplierId, String userId) async {
+      double price, String supplierId, String userId, String imageUrl) async {
     CollectionReference cartRef = FirebaseFirestore.instance.collection('cart');
     DocumentReference cartDocRef = cartRef.doc(productId);
 
@@ -30,6 +29,7 @@ class Cart with ChangeNotifier {
         'price': price,
         'quantity': 1,
         'supplierId': supplierId,
+        'image': imageUrl,
       }).then((value) => log('added to cart'));
     }
   }
@@ -49,6 +49,7 @@ class Cart with ChangeNotifier {
             name: data['name'],
             price: data["price"],
             quantity: data['quantity'],
+            image: data['image'],
           );
         },
       ).toList()),
