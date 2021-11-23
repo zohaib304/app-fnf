@@ -118,13 +118,37 @@ class _ProductDetailsState extends State<ProductDetails> {
                                 ),
                                 const SizedBox(height: 10),
                                 // price
-                                Text(
-                                  'Rs. ${product['price']}',
-                                  style: const TextStyle(
-                                    color: Colors.black87,
-                                    fontSize: 20,
-                                    fontWeight: FontWeight.bold,
-                                  ),
+                                Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    Text(
+                                      'Rs. ${product['price']}',
+                                      style: const TextStyle(
+                                        color: Colors.black87,
+                                        fontSize: 20,
+                                        fontWeight: FontWeight.bold,
+                                      ),
+                                    ),
+                                    Container(
+                                      child: Row(
+                                        children: [
+                                          IconButton(
+                                            icon: const Icon(
+                                                Icons.favorite_border),
+                                            onPressed: () {},
+                                          ),
+                                          IconButton(
+                                            icon: const Icon(Icons.share),
+                                            onPressed: () {
+                                              Share.share(
+                                                  'Check out this product: ${product['productName']}');
+                                            },
+                                          ),
+                                        ],
+                                      ),
+                                    )
+                                  ],
                                 ),
                               ],
                             ),
