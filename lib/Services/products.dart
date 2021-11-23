@@ -1,5 +1,3 @@
-import 'dart:developer';
-
 import 'package:android_app_fnf/Models/product.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
@@ -8,8 +6,6 @@ class Products with ChangeNotifier {
   // last document snapshot
   late DocumentSnapshot lastDocumentSnapshot;
   int documentLimit = 2;
-  bool _hasNext = true;
-  bool _isFetchingProducts = false;
 
   // get all products from firebase database and store it in a list
   Stream<List<Product>> getProducts() {

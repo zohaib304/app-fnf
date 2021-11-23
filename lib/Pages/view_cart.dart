@@ -109,7 +109,7 @@ class ViewCart extends StatelessWidget {
                                             MainAxisAlignment.spaceBetween,
                                         children: [
                                           Text(
-                                            '\Rs ${cartItem.price.round()}',
+                                            'Rs ${cartItem.price.round()}',
                                             style: const TextStyle(
                                               fontSize: 16,
                                               fontWeight: FontWeight.w500,
