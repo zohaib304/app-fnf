@@ -5,6 +5,7 @@ class Product {
   final String supplierId;
   final double price;
   final List<dynamic> images;
+  final bool isFavorite;
 
   Product({
     required this.id,
@@ -13,5 +14,6 @@ class Product {
     required this.supplierId,
     required this.price,
     required this.images,
+    this.isFavorite = false,
   });
 }

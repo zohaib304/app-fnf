@@ -130,16 +130,21 @@ class _ProductDetailsState extends State<ProductDetails> {
                                         fontWeight: FontWeight.bold,
                                       ),
                                     ),
-                                    Container(
+                                    SizedBox(
                                       child: Row(
                                         children: [
                                           IconButton(
                                             icon: const Icon(
-                                                Icons.favorite_border),
+                                              Icons.favorite_border,
+                                              color: Colors.black54,
+                                            ),
                                             onPressed: () {},
                                           ),
                                           IconButton(
-                                            icon: const Icon(Icons.share),
+                                            icon: const Icon(
+                                              Icons.share,
+                                              color: Colors.black54,
+                                            ),
                                             onPressed: () {
                                               Share.share(
                                                   'Check out this product: ${product['productName']}');
