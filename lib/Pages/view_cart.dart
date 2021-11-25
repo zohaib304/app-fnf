@@ -341,7 +341,7 @@ class _ViewCartState extends State<ViewCart> {
                     ),
                   ),
                   label: const Text(
-                    "PROCEED",
+                    "Proceed",
                     style: TextStyle(
                       fontSize: 18,
                       // fontWeight: FontWeight.bold,
