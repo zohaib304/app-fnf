@@ -348,7 +348,9 @@ class _ViewCartState extends State<ViewCart> {
                       letterSpacing: 0.8,
                     ),
                   ),
-                  onPressed: () {},
+                  onPressed: () {
+                    Navigator.pushNamed(context, '/select-payment');
+                  },
                 ),
               ),
             ],

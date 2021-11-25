@@ -1,5 +1,6 @@
 import 'package:android_app_fnf/Pages/product_details.dart';
 import 'package:android_app_fnf/Pages/profile.dart';
+import 'package:android_app_fnf/Pages/select_payament.dart';
 import 'package:android_app_fnf/Pages/view_cart.dart';
 import 'package:android_app_fnf/Services/auth.dart';
 import 'package:android_app_fnf/Services/cart.dart';
@@ -48,6 +49,7 @@ class MyApp extends StatelessWidget {
           ProductDetails.routeName: (context) => const ProductDetails(),
           Profile.routeName: (context) => const Profile(),
           ViewCart.routeName: (context) => const ViewCart(),
+          SelectPayment.routeName: (context) => const SelectPayment(),
         },
       ),
     );
