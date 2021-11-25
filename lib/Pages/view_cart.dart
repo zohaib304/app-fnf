@@ -236,29 +236,36 @@ class ViewCart extends StatelessWidget {
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceAround,
             children: [
-              const Text(
-                'Total:',
-                style: TextStyle(
-                  fontSize: 20,
-                ),
-              ),
-              StreamBuilder(
-                stream: getCartItems.getTotalPrice(firebaseUser.uid),
-                builder: (context, snapshot) {
-                  if (snapshot.hasData) {
-                    return Text(
-                      snapshot.data.toString(),
-                      style: const TextStyle(
+              SizedBox(
+                child: Row(
+                  children: [
+                    const Text(
+                      'Sub Total:',
+                      style: TextStyle(
                         fontSize: 20,
-                        fontWeight: FontWeight.bold,
                       ),
-                    );
-                  }
-                  if (snapshot.hasError) {
-                    return Text('Error: ${snapshot.error}');
-                  }
-                  return const CircularProgressIndicator();
-                },
+                    ),
+                    const SizedBox(width: 10),
+                    StreamBuilder(
+                      stream: getCartItems.getTotalPrice(firebaseUser.uid),
+                      builder: (context, snapshot) {
+                        if (snapshot.hasData) {
+                          return Text(
+                            snapshot.data.toString(),
+                            style: const TextStyle(
+                              fontSize: 24,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          );
+                        }
+                        if (snapshot.hasError) {
+                          return Text('Error: ${snapshot.error}');
+                        }
+                        return const CircularProgressIndicator();
+                      },
+                    ),
+                  ],
+                ),
               ),
               Directionality(
                 textDirection: TextDirection.rtl,
