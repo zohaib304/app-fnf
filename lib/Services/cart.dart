@@ -157,5 +157,5 @@ class Cart with ChangeNotifier {
         },
       ),
     );
-  }
+  }  
 }
