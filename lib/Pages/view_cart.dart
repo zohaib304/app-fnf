@@ -5,10 +5,17 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-class ViewCart extends StatelessWidget {
+class ViewCart extends StatefulWidget {
   const ViewCart({Key? key}) : super(key: key);
 
   static const routeName = '/view-cart';
+
+  @override
+  State<ViewCart> createState() => _ViewCartState();
+}
+
+class _ViewCartState extends State<ViewCart> {
+  bool isLoading = false;
 
   @override
   Widget build(BuildContext context) {
@@ -17,6 +24,16 @@ class ViewCart extends StatelessWidget {
     return Scaffold(
       backgroundColor: const Color(0xffF5F6F8),
       appBar: AppBar(
+        bottom: isLoading
+            ? PreferredSize(
+                preferredSize: const Size.fromHeight(0),
+                child: LinearProgressIndicator(
+                  color: Theme.of(context).primaryColor,
+                  backgroundColor:
+                      Theme.of(context).primaryColor.withOpacity(0.3),
+                ),
+              )
+            : null,
         elevation: .5,
         backgroundColor: Colors.white,
         iconTheme: const IconThemeData(color: Colors.black),
@@ -121,10 +138,26 @@ class ViewCart extends StatelessWidget {
                                               InkWell(
                                                 onTap: cartItem.quantity > 1
                                                     ? () {
-                                                        getCartItems
-                                                            .removeFromCart(
-                                                                cartItem
-                                                                    .productId);
+                                                        try {
+                                                          // set state to show loading
+                                                          setState(() {
+                                                            isLoading = true;
+                                                          });
+                                                          getCartItems
+                                                              .removeFromCart(
+                                                                  cartItem
+                                                                      .productId)
+                                                              .then((value) {
+                                                            // set state to hide loading
+                                                            setState(() {
+                                                              isLoading = false;
+                                                            });
+                                                          });
+                                                        } catch (e) {
+                                                          setState(() {
+                                                            isLoading = false;
+                                                          });
+                                                        }
                                                       }
                                                     : null,
                                                 child: Container(
@@ -160,8 +193,25 @@ class ViewCart extends StatelessWidget {
                                               const SizedBox(width: 10),
                                               InkWell(
                                                 onTap: () {
-                                                  getCartItems.increaseQuantity(
-                                                      cartItem.productId);
+                                                  try {
+                                                    // set state to show loading
+                                                    setState(() {
+                                                      isLoading = true;
+                                                    });
+                                                    getCartItems
+                                                        .increaseQuantity(
+                                                            cartItem.productId)
+                                                        .then((value) {
+                                                      // set state to hide loading
+                                                      setState(() {
+                                                        isLoading = false;
+                                                      });
+                                                    });
+                                                  } catch (e) {
+                                                    setState(() {
+                                                      isLoading = false;
+                                                    });
+                                                  }
                                                 },
                                                 child: Container(
                                                   width: 30,
@@ -182,9 +232,9 @@ class ViewCart extends StatelessWidget {
                                                 ),
                                               ),
                                             ],
-                                          )
+                                          ),
                                         ],
-                                      )
+                                      ),
                                     ],
                                   ),
                                 )
