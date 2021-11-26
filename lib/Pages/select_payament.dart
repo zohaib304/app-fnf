@@ -2,6 +2,8 @@ import 'dart:developer';
 
 import 'package:flutter/material.dart';
 
+enum PaymentMethod { cashOnDelivery, card }
+
 class SelectPayment extends StatefulWidget {
   const SelectPayment({Key? key}) : super(key: key);
 
@@ -13,6 +15,7 @@ class SelectPayment extends StatefulWidget {
 
 class _SelectPaymentState extends State<SelectPayment> {
   int _index = 0;
+  PaymentMethod? _paymentMethod = PaymentMethod.cashOnDelivery;
 
   @override
   Widget build(BuildContext context) {
@@ -54,7 +57,32 @@ class _SelectPaymentState extends State<SelectPayment> {
           Step(
             state: _index == 0 ? StepState.indexed : StepState.complete,
             title: const Text("Payment"),
-            content: const Text("Select Payment Method"),
+            content: Column(
+              children: [
+                RadioListTile<PaymentMethod>(
+                  title: const Text('Cash on Delivery'),
+                  subtitle: const Text('Pay with cash on delivery'),
+                  value: PaymentMethod.cashOnDelivery,
+                  groupValue: _paymentMethod,
+                  onChanged: (PaymentMethod? value) {
+                    setState(() {
+                      _paymentMethod = value;
+                    });
+                  },
+                ),
+                RadioListTile<PaymentMethod>(
+                  title: const Text('Card'),
+                  subtitle: const Text('Pay with credit card'),
+                  value: PaymentMethod.card,
+                  groupValue: _paymentMethod,
+                  onChanged: (PaymentMethod? value) {
+                    setState(() {
+                      _paymentMethod = value;
+                    });
+                  },
+                ),
+              ],
+            ),
             isActive: _index >= 0,
           ),
           Step(
