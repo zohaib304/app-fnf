@@ -1,7 +1,9 @@
+import 'package:android_app_fnf/Pages/new_address.dart';
 import 'package:android_app_fnf/Pages/product_details.dart';
 import 'package:android_app_fnf/Pages/profile.dart';
 import 'package:android_app_fnf/Pages/select_payament.dart';
 import 'package:android_app_fnf/Pages/view_cart.dart';
+import 'package:android_app_fnf/Services/add_new_address.dart';
 import 'package:android_app_fnf/Services/auth.dart';
 import 'package:android_app_fnf/Services/cart.dart';
 import 'package:android_app_fnf/Services/products.dart';
@@ -37,6 +39,9 @@ class MyApp extends StatelessWidget {
         ChangeNotifierProvider(
           create: (context) => Products(),
         ),
+        ChangeNotifierProvider(
+          create: (context) => AddNewAddress(),
+        ),
       ],
       child: MaterialApp(
         debugShowCheckedModeBanner: false,
@@ -50,6 +55,7 @@ class MyApp extends StatelessWidget {
           Profile.routeName: (context) => const Profile(),
           ViewCart.routeName: (context) => const ViewCart(),
           SelectPayment.routeName: (context) => const SelectPayment(),
+          NewAddress.routeName: (context) => NewAddress(),
         },
       ),
     );

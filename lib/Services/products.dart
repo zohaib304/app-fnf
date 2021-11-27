@@ -11,7 +11,7 @@ class Products with ChangeNotifier {
   Stream<List<Product>> getProducts() {
     final collectionReference =
         FirebaseFirestore.instance.collection('products');
-    final snapshots = collectionReference.limit(documentLimit).snapshots();
+    final snapshots = collectionReference.snapshots();
 
     return snapshots.map(
       (snapshot) => (snapshot.docs.map(
