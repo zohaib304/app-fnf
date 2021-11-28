@@ -20,8 +20,7 @@ class SelectPayment extends StatefulWidget {
 
 class _SelectPaymentState extends State<SelectPayment> {
   int _index = 0;
-  int radioValue =
-      0; // TODO: SET THE INITIAL VALUE TO -1 AND FIX THE ERROR LATER
+  int radioValue = -1;
   double _margin = 0.0;
   String _selectedAddress = '';
   PaymentMethod? _paymentMethod = PaymentMethod.cashOnDelivery;
@@ -52,7 +51,6 @@ class _SelectPaymentState extends State<SelectPayment> {
         onStepContinue: () {
           log(_index.toString());
           final isLastStep = _index == 2;
-
           if (isLastStep) {
             log("Completed");
           } else {
@@ -330,7 +328,7 @@ class _SelectPaymentState extends State<SelectPayment> {
                     borderRadius: BorderRadius.circular(5),
                   ),
                   child: Text(
-                    '${_paymentMethod?.toString()}',
+                    '${_paymentMethod?.toString()}', // TODO payment method
                     style: const TextStyle(fontSize: 16),
                   ),
                 ),
