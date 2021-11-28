@@ -47,6 +47,41 @@ class AddNewAddress with ChangeNotifier {
     );
   }
 
+  // get address by id
+  Future<ShippingAddress> getAddressById(String id) async {
+    final addressCollection =
+        FirebaseFirestore.instance.collection('addresses');
+    final snapshot = await addressCollection.doc(id).get();
+    final data = snapshot.data();
+    return ShippingAddress(
+      id: data!['id'],
+      userId: data['userId'],
+      customerName: data["customerName"],
+      address: data["address"],
+      city: data['city'],
+      state: data['state'],
+      zipCode: data['zip'],
+      phone: data['phone'],
+    );
+  }
+
+  // TODO: update address
+  // update address by id
+  Future<void> updateAddress(String id, String customerName, String address,
+      String city, String state, String zip, String phone) async {
+    final addressCollection =
+        FirebaseFirestore.instance.collection('addresses');
+    await addressCollection.doc(id).update({
+      'customerName': customerName,
+      'address': address,
+      'city': city,
+      'state': state,
+      'zip': zip,
+      'phone': phone,
+    });
+    notifyListeners();
+  }
+
   // delete single address from firestore collection
   Future<void> deleteAddress(String addressId) async {
     final CollectionReference addressCollection =

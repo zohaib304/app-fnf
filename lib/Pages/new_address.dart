@@ -180,6 +180,7 @@ class NewAddress extends StatelessWidget {
                           ),
                         );
                         _formKey.currentState!.reset();
+                        Navigator.of(context).pop();
                       });
                     } on FirebaseException catch (error) {
                       log(error.toString());
