@@ -168,22 +168,24 @@ class _SelectPaymentState extends State<SelectPayment> {
           ),
         ],
       ),
-      floatingActionButton: FloatingActionButton.extended(
-        isExtended: true,
-        onPressed: () {
-          Navigator.pushNamed(context, '/new-address');
-        },
-        tooltip: 'New Address',
-        icon: const Icon(Icons.add),
-        // shape: const RoundedRectangleBorder(
-        //   borderRadius: BorderRadius.all(
-        //     Radius.circular(15.0),
-        //   ),
-        // ),
-        label: const Text(
-          'New Address',
-        ),
-      ),
+      floatingActionButton: _index == 1
+          ? FloatingActionButton.extended(
+              isExtended: true,
+              onPressed: () {
+                Navigator.pushNamed(context, '/new-address');
+              },
+              tooltip: 'New Address',
+              icon: const Icon(Icons.add),
+              // shape: const RoundedRectangleBorder(
+              //   borderRadius: BorderRadius.all(
+              //     Radius.circular(15.0),
+              //   ),
+              // ),
+              label: const Text(
+                'New Address',
+              ),
+            )
+          : null,
     );
   }
 }
