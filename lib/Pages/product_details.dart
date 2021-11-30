@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:android_app_fnf/Models/product_argumets.dart';
 import 'package:android_app_fnf/Services/cart.dart';
 import 'package:android_app_fnf/Widgets/sign_in_sheet.dart';
@@ -60,7 +62,9 @@ class _ProductDetailsState extends State<ProductDetails> {
                   },
                 );
               } else {
-                Navigator.pushNamed(context, '/view-cart');
+                Navigator.pushNamed(context, '/view-cart', arguments: {
+                  'supplierId': product.supplierId,
+                });
               }
             },
           ),

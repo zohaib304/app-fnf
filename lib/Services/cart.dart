@@ -5,6 +5,25 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 
 class Cart with ChangeNotifier {
+
+  // list of cart items doc id
+  List<String> _cartIds = [];
+
+  // get list of doc id of cart items
+  List<String> get cartIds {
+    return [..._cartIds];
+  }
+
+  // get list of doc id of cart items from firestore collection where userId equal to userId
+  Future<void> getDocIds(String userId) async {
+    log('getDocIds');
+    // final userId = await getUserId();
+    final querySnapshot = await FirebaseFirestore.instance.collection('cart').where('userId', isEqualTo: userId).get();
+    _cartIds = querySnapshot.docs.map<String>((doc) => doc.id).toList();
+    notifyListeners();
+  }
+
+
   Future<void> addToCart(BuildContext context, String productId, String name,
       double price, String supplierId, String userId, String imageUrl) async {
     CollectionReference cartRef = FirebaseFirestore.instance.collection('cart');

@@ -65,7 +65,6 @@ class AddNewAddress with ChangeNotifier {
     );
   }
 
-  // TODO: update address
   // update address by id
   Future<void> updateAddress(String id, String customerName, String address,
       String city, String state, String zip, String phone) async {

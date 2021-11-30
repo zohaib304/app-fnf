@@ -1,11 +1,13 @@
 import 'dart:developer';
 import 'package:android_app_fnf/Models/address.dart';
-import 'package:android_app_fnf/Models/cart_items.dart';
 import 'package:android_app_fnf/Services/add_new_address.dart';
 import 'package:android_app_fnf/Services/cart.dart';
+import 'package:android_app_fnf/Services/order.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+
+// TODO The stepper need to be in different file and improve the state throughout the app
 
 enum PaymentMethod { cashOnDelivery, card }
 
@@ -23,12 +25,14 @@ class _SelectPaymentState extends State<SelectPayment> {
   int radioValue = -1;
   double _margin = 0.0;
   String _selectedAddress = '';
+  bool _placeOrder = false;
   PaymentMethod? _paymentMethod = PaymentMethod.cashOnDelivery;
   @override
   Widget build(BuildContext context) {
     final addressList = Provider.of<AddNewAddress>(context);
     final firebaseUser = context.watch<User?>();
     final cart = Provider.of<Cart>(context);
+    final placeOrder = Provider.of<Order>(context);
     return Scaffold(
       backgroundColor: const Color(0xffF5F6F8),
       appBar: AppBar(
@@ -63,6 +67,51 @@ class _SelectPaymentState extends State<SelectPayment> {
           setState(() {
             _index = index;
           });
+        },
+        controlsBuilder: (BuildContext context,
+            {VoidCallback? onStepContinue, VoidCallback? onStepCancel}) {
+          return Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: <Widget>[
+              if (_index > 0)
+                TextButton(
+                  onPressed: onStepCancel,
+                  child: const Text('Back'),
+                ),
+              if (_index < 2)
+                ElevatedButton(
+                  onPressed: onStepContinue,
+                  child: const Text('Next'),
+                ),
+              if (_index == 2)
+                ElevatedButton(
+                  onPressed: () {
+                    try {
+                      setState(() {
+                        _placeOrder = true;
+                      });
+                      cart.getDocIds(firebaseUser!.uid).then((_) {
+                        placeOrder.addOrder(
+                          firebaseUser.uid,
+                          cart.cartIds,
+                        );
+                      }).then((value) {
+                        cart.clearCart(firebaseUser.uid);
+                        Navigator.pushNamed(context, '/order-confirmed');
+                      });
+                    } catch (e) {
+                      setState(() {
+                        _placeOrder = false;
+                      });
+                      log(e.toString());
+                    }
+                  },
+                  child: _placeOrder
+                      ? const Text("Loading")
+                      : const Text('Place Order'),
+                ),
+            ],
+          );
         },
         steps: [
           Step(
@@ -99,148 +148,6 @@ class _SelectPaymentState extends State<SelectPayment> {
                   },
                 ),
                 const SizedBox(height: 20),
-                const Text(
-                  "Items",
-                  style: TextStyle(
-                    fontSize: 20,
-                    fontWeight: FontWeight.w600,
-                  ),
-                ),
-                const SizedBox(height: 10),
-                StreamBuilder<List<CartItem>>(
-                  stream: cart.getCartItems(firebaseUser!.uid),
-                  builder: (context, snapshot) {
-                    if (snapshot.hasData) {
-                      final cartItems = snapshot.data;
-                      return ListView.separated(
-                        separatorBuilder: (context, index) => const SizedBox(
-                          height: 5.0,
-                          // color: Colors.black,
-                        ),
-                        shrinkWrap: true,
-                        physics: const NeverScrollableScrollPhysics(),
-                        itemCount: cartItems!.length,
-                        itemBuilder: (context, index) {
-                          return ListTile(
-                            tileColor: Colors.white,
-                            trailing: IconButton(
-                              icon: const Icon(Icons.delete),
-                              onPressed: () {
-                                cart.deleteFromCart(cartItems[index].productId);
-                              },
-                            ),
-                            dense: true,
-                            title: Text(
-                              cartItems[index].name,
-                              style:
-                                  const TextStyle(fontWeight: FontWeight.w600),
-                            ),
-                            subtitle: Text("Quantity: " +
-                                cartItems[index].quantity.toString() +
-                                " - Rs " +
-                                cartItems[index].price.toString()),
-                          );
-                        },
-                      );
-                    } else {
-                      return const Text('Loading...');
-                    }
-                  },
-                ),
-                const SizedBox(height: 20),
-                // add margin price and total
-                const Text(
-                  "Add your margin",
-                  style: TextStyle(
-                    fontSize: 20,
-                    fontWeight: FontWeight.w600,
-                  ),
-                ),
-                const SizedBox(height: 10),
-                Container(
-                  color: Colors.white,
-                  padding:
-                      const EdgeInsets.symmetric(vertical: 10, horizontal: 10),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      const Text("Add your margin"),
-                      SizedBox(
-                        width: 70,
-                        child: TextFormField(
-                          keyboardType: TextInputType.number,
-                          onChanged: (value) {
-                            if (value.isEmpty) {
-                              setState(() {
-                                _margin = 0;
-                              });
-                            } else {
-                              setState(() {
-                                _margin = double.parse(value);
-                              });
-                            }
-                          },
-                          validator: (value) {
-                            if (value!.isEmpty) {
-                              setState(() {
-                                _margin = 0;
-                              });
-                            }
-                            return null;
-                          },
-                          decoration: const InputDecoration(
-                            prefix: Text("Rs "),
-                            hintText: "0",
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-                const SizedBox(height: 20),
-                // info container with light blue background
-                Container(
-                  width: double.infinity,
-                  color: Colors.lightGreen[100],
-                  padding: const EdgeInsets.symmetric(
-                    vertical: 10,
-                    horizontal: 10,
-                  ),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      const Text("You will earn amount of Rs "),
-                      Text(
-                        _margin.toString(),
-                        style: const TextStyle(
-                          fontWeight: FontWeight.w600,
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-                const SizedBox(height: 20),
-                const Text(
-                    "This is the total amount will be collected from customer"),
-                const SizedBox(height: 10),
-                StreamBuilder<double>(
-                  stream: cart.getTotalPrice(firebaseUser.uid),
-                  builder: (context, snapshot) {
-                    if (snapshot.hasData) {
-                      return Text(
-                        "Rs " + (snapshot.data! + _margin).toString(),
-                        style: const TextStyle(
-                          fontSize: 24,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      );
-                    }
-                    if (snapshot.hasError) {
-                      return Text('Error: ${snapshot.error}');
-                    }
-                    return const CircularProgressIndicator();
-                  },
-                ),
               ],
             ),
             isActive: _index >= 0,
@@ -249,7 +156,7 @@ class _SelectPaymentState extends State<SelectPayment> {
             state: _index == 1 ? StepState.indexed : StepState.complete,
             title: const Text("Address"),
             content: StreamBuilder<List<ShippingAddress>>(
-              stream: addressList.getAddress(firebaseUser.uid),
+              stream: addressList.getAddress(firebaseUser!.uid),
               builder: (context, snapshot) {
                 if (snapshot.hasData) {
                   final address = snapshot.data;
@@ -263,6 +170,7 @@ class _SelectPaymentState extends State<SelectPayment> {
                     itemBuilder: (context, index) {
                       return RadioListTile<int>(
                         tileColor: Colors.white,
+                        // selected: _selectedAddress == address[index].id,
                         value: index,
                         groupValue: radioValue,
                         onChanged: (ind) {
@@ -277,26 +185,13 @@ class _SelectPaymentState extends State<SelectPayment> {
                           address[index].address,
                           maxLines: 3,
                         ),
-                        isThreeLine: true,
-                        secondary: SizedBox(
-                          width: 96,
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.end,
-                            children: [
-                              IconButton(
-                                icon: const Icon(Icons.edit),
-                                onPressed: () {
-                                  //TODO: edit address
-                                },
-                              ),
-                              IconButton(
-                                icon: const Icon(Icons.close),
-                                onPressed: () {
-                                  addressList.deleteAddress(address[index].id);
-                                },
-                              ),
-                            ],
-                          ),
+                        // isThreeLine: true,
+                        secondary: IconButton(
+                          icon: const Icon(Icons.close),
+                          onPressed: () {
+                            // TODO: CHANGE TO EDIT ADDRESS
+                            addressList.deleteAddress(address[index].id);
+                          },
                         ),
                       );
                     },
@@ -394,6 +289,105 @@ class _SelectPaymentState extends State<SelectPayment> {
                     return const Center(
                       child: CircularProgressIndicator(),
                     );
+                  },
+                ),
+                const SizedBox(height: 20),
+                // add margin price and total
+                const Text(
+                  "Add your margin",
+                  style: TextStyle(
+                    fontSize: 20,
+                    fontWeight: FontWeight.w600,
+                  ),
+                ),
+                const SizedBox(height: 10),
+                Container(
+                  color: Colors.white,
+                  padding:
+                      const EdgeInsets.symmetric(vertical: 10, horizontal: 10),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      const Text("Add your margin"),
+                      SizedBox(
+                        width: 70,
+                        child: TextFormField(
+                          keyboardType: TextInputType.number,
+                          onChanged: (value) {
+                            if (value.isEmpty) {
+                              setState(() {
+                                _margin = 0;
+                              });
+                            } else {
+                              setState(() {
+                                _margin = double.parse(value);
+                              });
+                            }
+                          },
+                          validator: (value) {
+                            if (value!.isEmpty) {
+                              setState(() {
+                                _margin = 0;
+                              });
+                            }
+                            return null;
+                          },
+                          decoration: const InputDecoration(
+                            prefix: Text("Rs "),
+                            hintText: "0",
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                const SizedBox(height: 20),
+                // info container with light blue background
+                Container(
+                  width: double.infinity,
+                  color: Colors.lightGreen[100],
+                  padding: const EdgeInsets.symmetric(
+                    vertical: 10,
+                    horizontal: 10,
+                  ),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      const Text("You will earn amount of "),
+                      Text(
+                        "Rs " + _margin.toString(),
+                        style: const TextStyle(
+                          fontWeight: FontWeight.w600,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                const SizedBox(height: 20),
+                const Text(
+                  "This is the total amount will be collected from the customer. Make sure you have already contacted the customer and confirmed the order.",
+                  style: TextStyle(
+                    fontSize: 14,
+                    color: Colors.black54,
+                  ),
+                ),
+                const SizedBox(height: 10),
+                StreamBuilder<double>(
+                  stream: cart.getTotalPrice(firebaseUser.uid),
+                  builder: (context, snapshot) {
+                    if (snapshot.hasData) {
+                      return Text(
+                        "Rs " + (snapshot.data! + _margin).toString(),
+                        style: const TextStyle(
+                          fontSize: 24,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      );
+                    }
+                    if (snapshot.hasError) {
+                      return Text('Error: ${snapshot.error}');
+                    }
+                    return const CircularProgressIndicator();
                   },
                 ),
               ],
