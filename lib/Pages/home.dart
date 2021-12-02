@@ -111,7 +111,9 @@ class Home extends StatelessWidget {
                     borderRadius: BorderRadius.circular(20),
                   ),
                   child: Center(
+                    // TODO : stream through an error fix it
                     child: StreamBuilder(
+                      initialData: '',
                       stream: cart.getTotalQuantity(firebaseUser!.uid),
                       builder: (context, snapshot) {
                         if (snapshot.hasData) {
@@ -121,6 +123,12 @@ class Home extends StatelessWidget {
                               color: Colors.white,
                               fontSize: 10,
                             ),
+                          );
+                        }
+                        if (snapshot.connectionState ==
+                            ConnectionState.waiting) {
+                          return const Center(
+                            child: CircularProgressIndicator(),
                           );
                         }
                         return Container();

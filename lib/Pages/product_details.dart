@@ -415,7 +415,7 @@ class _ProductDetailsState extends State<ProductDetails> {
                                 _loading = true;
                               });
                               addToCart
-                                  .addToCartt(
+                                  .addToCart(
                                 product.productId,
                                 product.name,
                                 product.price,
