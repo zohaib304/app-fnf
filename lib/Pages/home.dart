@@ -1,4 +1,5 @@
 import 'package:android_app_fnf/Models/product_argumets.dart';
+import 'package:android_app_fnf/Services/cart.dart';
 import 'package:android_app_fnf/Widgets/carousel_slider_main.dart';
 import 'package:android_app_fnf/Widgets/sign_in_sheet.dart';
 import 'package:cached_network_image/cached_network_image.dart';
@@ -16,6 +17,7 @@ class Home extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final firebaseUser = context.watch<User?>();
+    final cart = Provider.of<Cart>(context);
     return Scaffold(
       backgroundColor: const Color(0xffF5F6F8),
       appBar: AppBar(
@@ -69,31 +71,66 @@ class Home extends StatelessWidget {
               ),
             ],
           ),
-          IconButton(
-            icon: Icon(
-              Icons.shopping_cart_outlined,
-              color: Colors.grey[600],
-            ),
-            onPressed: () {
-              if (firebaseUser == null) {
-                showModalBottomSheet(
-                  shape: const RoundedRectangleBorder(
-                    //the rounded corner is created here
-                    borderRadius: BorderRadius.only(
-                      topLeft: Radius.circular(20),
-                      topRight: Radius.circular(20),
+          Stack(
+            children: [
+              Positioned(
+                child: IconButton(
+                  icon: Icon(
+                    Icons.shopping_cart_outlined,
+                    color: Colors.grey[600],
+                  ),
+                  onPressed: () {
+                    if (firebaseUser == null) {
+                      showModalBottomSheet(
+                        shape: const RoundedRectangleBorder(
+                          //the rounded corner is created here
+                          borderRadius: BorderRadius.only(
+                            topLeft: Radius.circular(20),
+                            topRight: Radius.circular(20),
+                          ),
+                        ),
+                        context: context,
+                        builder: (context) {
+                          return const SignInSheet();
+                        },
+                      );
+                    } else {
+                      Navigator.pushNamed(context, '/view-cart');
+                    }
+                  },
+                ),
+              ),
+              Positioned(
+                top: 10,
+                right: 10,
+                child: Container(
+                  width: 15,
+                  height: 15,
+                  decoration: BoxDecoration(
+                    color: Colors.red,
+                    borderRadius: BorderRadius.circular(20),
+                  ),
+                  child: Center(
+                    child: StreamBuilder(
+                      stream: cart.getTotalQuantity(firebaseUser!.uid),
+                      builder: (context, snapshot) {
+                        if (snapshot.hasData) {
+                          return Text(
+                            snapshot.data.toString(),
+                            style: const TextStyle(
+                              color: Colors.white,
+                              fontSize: 10,
+                            ),
+                          );
+                        }
+                        return Container();
+                      },
                     ),
                   ),
-                  context: context,
-                  builder: (context) {
-                    return const SignInSheet();
-                  },
-                );
-              } else {
-                Navigator.pushNamed(context, '/view-cart');
-              }
-            },
-          ),
+                ),
+              ),
+            ],
+          )
         ],
       ),
       body: SingleChildScrollView(

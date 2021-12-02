@@ -1,5 +1,3 @@
-import 'dart:developer';
-
 import 'package:android_app_fnf/Models/cart_items.dart';
 import 'package:android_app_fnf/Services/cart.dart';
 import 'package:cached_network_image/cached_network_image.dart';
