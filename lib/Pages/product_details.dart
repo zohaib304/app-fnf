@@ -315,6 +315,7 @@ class _ProductDetailsState extends State<ProductDetails> {
       bottomNavigationBar: BottomAppBar(
         color: const Color(0xffF5F6F8),
         child: StreamBuilder<bool>(
+          //TODO CHECK OF USER IS LOGGED IN OR NOT
           stream: addToCart.checkIfProductExists(
               product.productId, firebaseUser!.uid),
           builder: (context, snapshot) {
