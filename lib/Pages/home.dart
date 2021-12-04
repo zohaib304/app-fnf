@@ -1,5 +1,4 @@
 import 'package:android_app_fnf/Models/product_argumets.dart';
-import 'package:android_app_fnf/Services/cart.dart';
 import 'package:android_app_fnf/Widgets/carousel_slider_main.dart';
 import 'package:android_app_fnf/Widgets/sign_in_sheet.dart';
 import 'package:cached_network_image/cached_network_image.dart';
@@ -17,7 +16,6 @@ class Home extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final firebaseUser = context.watch<User?>();
-    final cart = Provider.of<Cart>(context);
     return Scaffold(
       backgroundColor: const Color(0xffF5F6F8),
       appBar: AppBar(
