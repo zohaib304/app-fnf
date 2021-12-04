@@ -129,16 +129,17 @@ class Cart with ChangeNotifier {
         .where('productId', isEqualTo: productId)
         .snapshots();
     return snapshots.map(
-      (snapshot) => snapshot.docs.map(
-        (snapshot) {
-          final data = snapshot.data();
-          return data['productId'] == productId;
-        },
-      ).toList().contains(true),
+      (snapshot) => snapshot.docs
+          .map(
+            (snapshot) {
+              final data = snapshot.data();
+              return data['productId'] == productId;
+            },
+          )
+          .toList()
+          .contains(true),
     );
   }
-  
-
 
   // increase quantity of product in cart
   Future<void> increaseQuantity(String productId) async {
@@ -215,10 +216,23 @@ class Cart with ChangeNotifier {
         (previousValue, doc) {
           final data = doc.data();
           log((data['quantity'] + previousValue).toString());
-          int total = data['quantity'] + previousValue;
+          int total = 0;
+          total = data['quantity'] + previousValue;
           return total;
         },
       ),
+    );
+  }
+
+  // check if cart is empty
+  Stream<bool> isCartEmpty(String userId) {
+    final cartRef = FirebaseFirestore.instance
+        .collection('cart')
+        .where('userId', isEqualTo: userId)
+        .snapshots();
+
+    return cartRef.map(
+      (snapshot) => snapshot.docs.isEmpty,
     );
   }
 }

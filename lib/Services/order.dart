@@ -5,7 +5,7 @@ class Order with ChangeNotifier {
   // write a function take userId, supplierId and list as argument and add the order to the firebase collection
 
   Future<void> addOrder(
-      String userId, List<String> cartItems) async {
+      String userId, String cartItems) async {
     // create order collection
     final CollectionReference orderCollection =
         FirebaseFirestore.instance.collection('orders');

@@ -1,5 +1,5 @@
 class PlaceOrder {
-  List<String> items = [];
+  String items;
   // String orderId;
   String userId;
   // String supplierId;

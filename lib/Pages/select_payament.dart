@@ -1,8 +1,10 @@
 import 'dart:developer';
 import 'package:android_app_fnf/Models/address.dart';
+import 'package:android_app_fnf/Models/cart_items.dart';
 import 'package:android_app_fnf/Services/add_new_address.dart';
 import 'package:android_app_fnf/Services/cart.dart';
 import 'package:android_app_fnf/Services/order.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -26,6 +28,7 @@ class _SelectPaymentState extends State<SelectPayment> {
   double _margin = 0.0;
   String _selectedAddress = '';
   bool _placeOrder = false;
+  bool isLoading = false;
   PaymentMethod? _paymentMethod = PaymentMethod.cashOnDelivery;
   @override
   Widget build(BuildContext context) {
@@ -91,10 +94,7 @@ class _SelectPaymentState extends State<SelectPayment> {
                         _placeOrder = true;
                       });
                       cart.getDocIds(firebaseUser!.uid).then((_) {
-                        placeOrder.addOrder(
-                          firebaseUser.uid,
-                          cart.cartIds,
-                        );
+                        placeOrder.addOrder(firebaseUser.uid, 'cartId');
                       }).then((value) {
                         cart.clearCart(firebaseUser.uid);
                         Navigator.pushNamed(context, '/order-confirmed');
@@ -148,6 +148,242 @@ class _SelectPaymentState extends State<SelectPayment> {
                   },
                 ),
                 const SizedBox(height: 20),
+                const Text(
+                  "Your Product",
+                  style: TextStyle(
+                    fontSize: 20,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+                StreamBuilder<List<CartItem>>(
+                  stream: cart.getCartItems(firebaseUser!.uid),
+                  builder: (context, snapshot) {
+                    if (snapshot.hasData) {
+                      final cartItems = snapshot.data;
+                      if (cartItems!.isEmpty) {
+                        return Container(
+                          padding: const EdgeInsets.all(20),
+                          child: const Center(
+                            child: Text(
+                              'No Product in Cart',
+                              // style: TextStyle(
+                              //   fontSize: 20,
+                              // ),
+                            ),
+                          ),
+                        );
+                      }
+                      return ListView.builder(
+                        shrinkWrap: true,
+                        physics: const NeverScrollableScrollPhysics(),
+                        itemCount: cartItems.length,
+                        itemBuilder: (context, index) {
+                          final cartItem = cartItems[index];
+                          return Stack(
+                            children: [
+                              Container(
+                                margin:
+                                    const EdgeInsets.only(top: 10, bottom: 10),
+                                padding: const EdgeInsets.all(10),
+                                decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(5),
+                                  color: Colors.white,
+                                  boxShadow: [
+                                    BoxShadow(
+                                      color: Colors.grey.withOpacity(0.2),
+                                      spreadRadius: 1,
+                                      blurRadius: 4,
+                                      offset: const Offset(
+                                          1, 1), // changes position of shadow
+                                    ),
+                                  ],
+                                ),
+                                child: Row(
+                                  // crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Container(
+                                      height: 100,
+                                      width: 100,
+                                      decoration: BoxDecoration(
+                                        image: DecorationImage(
+                                          image: CachedNetworkImageProvider(
+                                            cartItem.image,
+                                          ),
+                                          fit: BoxFit.cover,
+                                        ),
+                                        borderRadius: BorderRadius.circular(2),
+                                        // color: Colors.amber,
+                                      ),
+                                    ),
+                                    const SizedBox(width: 10),
+                                    Expanded(
+                                      child: Column(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: [
+                                          Text(
+                                            cartItem.name,
+                                            maxLines: 2,
+                                            style: const TextStyle(
+                                              fontSize: 16,
+                                              fontWeight: FontWeight.w500,
+                                            ),
+                                          ),
+                                          const SizedBox(height: 14),
+                                          Row(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.spaceBetween,
+                                            children: [
+                                              Text(
+                                                'Rs ${cartItem.price.round()}',
+                                                style: const TextStyle(
+                                                  fontSize: 16,
+                                                  fontWeight: FontWeight.w500,
+                                                ),
+                                              ),
+                                              const SizedBox(width: 5),
+                                              Row(
+                                                children: [
+                                                  InkWell(
+                                                    onTap: cartItem.quantity > 1
+                                                        ? () {
+                                                            try {
+                                                              // set state to show loading
+                                                              setState(() {
+                                                                isLoading =
+                                                                    true;
+                                                              });
+                                                              cart
+                                                                  .removeFromCart(
+                                                                      cartItem
+                                                                          .productId)
+                                                                  .then(
+                                                                      (value) {
+                                                                // set state to hide loading
+                                                                setState(() {
+                                                                  isLoading =
+                                                                      false;
+                                                                });
+                                                              });
+                                                            } catch (e) {
+                                                              setState(() {
+                                                                isLoading =
+                                                                    false;
+                                                              });
+                                                            }
+                                                          }
+                                                        : null,
+                                                    child: Container(
+                                                      width: 30,
+                                                      height: 30,
+                                                      decoration: BoxDecoration(
+                                                        borderRadius:
+                                                            BorderRadius
+                                                                .circular(5),
+                                                        color: Colors.grey
+                                                            .withOpacity(0.2),
+                                                      ),
+                                                      child: Center(
+                                                        child: Icon(
+                                                          Icons.remove,
+                                                          size: 20,
+                                                          color:
+                                                              cartItem.quantity >
+                                                                      1
+                                                                  ? Colors.black
+                                                                  : Colors.grey,
+                                                        ),
+                                                      ),
+                                                    ),
+                                                  ),
+                                                  const SizedBox(width: 10),
+                                                  Text(
+                                                    '${cartItem.quantity}',
+                                                    style: const TextStyle(
+                                                      fontSize: 16,
+                                                      fontWeight:
+                                                          FontWeight.w500,
+                                                    ),
+                                                  ),
+                                                  const SizedBox(width: 10),
+                                                  InkWell(
+                                                    onTap: () {
+                                                      try {
+                                                        // set state to show loading
+                                                        setState(() {
+                                                          isLoading = true;
+                                                        });
+                                                        cart
+                                                            .increaseQuantity(
+                                                                cartItem
+                                                                    .productId)
+                                                            .then((value) {
+                                                          // set state to hide loading
+                                                          setState(() {
+                                                            isLoading = false;
+                                                          });
+                                                        });
+                                                      } catch (e) {
+                                                        setState(() {
+                                                          isLoading = false;
+                                                        });
+                                                      }
+                                                    },
+                                                    child: Container(
+                                                      width: 30,
+                                                      height: 30,
+                                                      decoration: BoxDecoration(
+                                                        borderRadius:
+                                                            BorderRadius
+                                                                .circular(5),
+                                                        color: Colors.grey
+                                                            .withOpacity(0.2),
+                                                      ),
+                                                      child: const Center(
+                                                        child: Icon(
+                                                          Icons.add,
+                                                          size: 20,
+                                                        ),
+                                                      ),
+                                                    ),
+                                                  ),
+                                                ],
+                                              ),
+                                            ],
+                                          ),
+                                        ],
+                                      ),
+                                    )
+                                  ],
+                                ),
+                              ),
+                              Positioned(
+                                top: 15,
+                                right: 10,
+                                child: GestureDetector(
+                                  onTap: () {
+                                    cart.deleteFromCart(cartItem.productId);
+                                  },
+                                  child: Icon(
+                                    Icons.close,
+                                    color: Theme.of(context).primaryColor,
+                                    size: 20,
+                                  ),
+                                ),
+                              )
+                            ],
+                          );
+                        },
+                      );
+                    }
+                    if (snapshot.hasError) {
+                      return Text('Error: ${snapshot.error}');
+                    }
+                    return const Center(
+                      child: CircularProgressIndicator(),
+                    );
+                  },
+                ),
               ],
             ),
             isActive: _index >= 0,
@@ -156,7 +392,7 @@ class _SelectPaymentState extends State<SelectPayment> {
             state: _index == 1 ? StepState.indexed : StepState.complete,
             title: const Text("Address"),
             content: StreamBuilder<List<ShippingAddress>>(
-              stream: addressList.getAddress(firebaseUser!.uid),
+              stream: addressList.getAddress(firebaseUser.uid),
               builder: (context, snapshot) {
                 if (snapshot.hasData) {
                   final address = snapshot.data;

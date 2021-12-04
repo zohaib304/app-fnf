@@ -95,48 +95,48 @@ class Home extends StatelessWidget {
                         },
                       );
                     } else {
-                      Navigator.pushNamed(context, '/view-cart');
+                      Navigator.pushNamed(context, '/select-payment');
                     }
                   },
                 ),
               ),
-              Positioned(
-                top: 10,
-                right: 10,
-                child: Container(
-                  width: 15,
-                  height: 15,
-                  decoration: BoxDecoration(
-                    color: Colors.red,
-                    borderRadius: BorderRadius.circular(20),
-                  ),
-                  child: Center(
-                    // TODO : stream through an error fix it
-                    child: StreamBuilder(
-                      initialData: '',
-                      stream: cart.getTotalQuantity(firebaseUser!.uid),
-                      builder: (context, snapshot) {
-                        if (snapshot.hasData) {
-                          return Text(
-                            snapshot.data.toString(),
-                            style: const TextStyle(
-                              color: Colors.white,
-                              fontSize: 10,
-                            ),
-                          );
-                        }
-                        if (snapshot.connectionState ==
-                            ConnectionState.waiting) {
-                          return const Center(
-                            child: CircularProgressIndicator(),
-                          );
-                        }
-                        return Container();
-                      },
-                    ),
-                  ),
-                ),
-              ),
+              // Positioned(
+              //   top: 10,
+              //   right: 10,
+              //   child: Container(
+              //     width: 15,
+              //     height: 15,
+              //     decoration: BoxDecoration(
+              //       color: Colors.red,
+              //       borderRadius: BorderRadius.circular(20),
+              //     ),
+              //     child: Center(
+              //       // TODO : stream through an error fix it
+              //       child: StreamBuilder(
+              //         initialData: '',
+              //         stream: cart.getTotalQuantity(firebaseUser!.uid),
+              //         builder: (context, snapshot) {
+              //           if (snapshot.hasData) {
+              //             return Text(
+              //               snapshot.data.toString(),
+              //               style: const TextStyle(
+              //                 color: Colors.white,
+              //                 fontSize: 10,
+              //               ),
+              //             );
+              //           }
+              //           if (snapshot.connectionState ==
+              //               ConnectionState.waiting) {
+              //             return const Center(
+              //               child: CircularProgressIndicator(),
+              //             );
+              //           }
+              //           return Container();
+              //         },
+              //       ),
+              //     ),
+              //   ),
+              // ),
             ],
           )
         ],

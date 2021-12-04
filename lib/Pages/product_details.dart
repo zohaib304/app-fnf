@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:android_app_fnf/Models/product_argumets.dart';
 import 'package:android_app_fnf/Services/cart.dart';
 import 'package:android_app_fnf/Widgets/sign_in_sheet.dart';
@@ -66,40 +68,40 @@ class _ProductDetailsState extends State<ProductDetails> {
                         },
                       );
                     } else {
-                      Navigator.pushNamed(context, '/view-cart');
+                      Navigator.pushNamed(context, '/select-payment');
                     }
                   },
                 ),
               ),
-              Positioned(
-                top: 10,
-                right: 10,
-                child: Container(
-                  width: 15,
-                  height: 15,
-                  decoration: BoxDecoration(
-                    color: Colors.red,
-                    borderRadius: BorderRadius.circular(20),
-                  ),
-                  child: Center(
-                    child: StreamBuilder(
-                      stream: addToCart.getTotalQuantity(firebaseUser!.uid),
-                      builder: (context, snapshot) {
-                        if (snapshot.hasData) {
-                          return Text(
-                            snapshot.data.toString(),
-                            style: const TextStyle(
-                              color: Colors.white,
-                              fontSize: 10,
-                            ),
-                          );
-                        }
-                        return Container();
-                      },
-                    ),
-                  ),
-                ),
-              ),
+              // Positioned(
+              //   top: 10,
+              //   right: 10,
+              //   child: Container(
+              //     width: 15,
+              //     height: 15,
+              //     decoration: BoxDecoration(
+              //       color: Colors.red,
+              //       borderRadius: BorderRadius.circular(20),
+              //     ),
+              //     child: Center(
+              //       child: StreamBuilder(
+              //         stream: addToCart.getTotalQuantity(firebaseUser!.uid),
+              //         builder: (context, snapshot) {
+              //           if (snapshot.hasData) {
+              //             return Text(
+              //               snapshot.data.toString(),
+              //               style: const TextStyle(
+              //                 color: Colors.white,
+              //                 fontSize: 10,
+              //               ),
+              //             );
+              //           }
+              //           return Container();
+              //         },
+              //       ),
+              //     ),
+              //   ),
+              // ),
             ],
           )
         ],
@@ -312,146 +314,490 @@ class _ProductDetailsState extends State<ProductDetails> {
       ),
       bottomNavigationBar: BottomAppBar(
         color: const Color(0xffF5F6F8),
-        child: Container(
-          padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 15),
-          decoration: BoxDecoration(
-            border: Border(
-              top: BorderSide(
-                color: (Colors.grey[300])!,
-                width: 1,
-              ),
-            ),
-          ),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceAround,
-            children: [
-              Directionality(
-                textDirection: TextDirection.rtl,
-                child: ElevatedButton.icon(
-                  style: ElevatedButton.styleFrom(
-                    primary: Colors.white,
-                    elevation: 0,
-                    padding:
-                        const EdgeInsetsDirectional.fromSTEB(30, 10, 30, 10),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(50),
-                    ),
-                  ),
-                  onPressed: () {
-                    // TODO:
-                    Share.share("Product Name");
-                  },
-                  icon: Container(
-                    padding: const EdgeInsets.all(3),
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(50),
-                      color: Colors.grey[400],
-                    ),
-                    child: const Icon(
-                      Icons.arrow_upward,
-                      color: Colors.white,
-                    ),
-                  ),
-                  label: const Text(
-                    "SHARE THIS",
-                    style: TextStyle(
-                      color: Colors.black54,
-                    ),
-                  ),
-                ),
-              ),
-              Directionality(
-                textDirection: TextDirection.rtl,
-                child: ElevatedButton.icon(
-                  style: ElevatedButton.styleFrom(
-                    primary: Theme.of(context).primaryColor,
-                    elevation: 0,
-                    padding:
-                        const EdgeInsetsDirectional.fromSTEB(30, 10, 30, 10),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(50),
-                    ),
-                  ),
-                  icon: Container(
-                    padding: const EdgeInsets.all(3),
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(50),
-                      color: Colors.white,
-                    ),
-                    child: Icon(
-                      Icons.chevron_left,
-                      color: Theme.of(context).primaryColor,
-                    ),
-                  ),
-                  label: !_loading
-                      ? const Text("ADD TO CART")
-                      : const Text(
-                          "...ADDING",
-                          style: TextStyle(
-                            color: Colors.black54,
+        child: StreamBuilder<bool>(
+          stream: addToCart.checkIfProductExists(
+              product.productId, firebaseUser!.uid),
+          builder: (context, snapshot) {
+            if (snapshot.hasData) {
+              // log(product.productId);
+              final isExist = snapshot.data;
+              return isExist!
+                  ? Container(
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 10, vertical: 15),
+                      decoration: BoxDecoration(
+                        border: Border(
+                          top: BorderSide(
+                            color: (Colors.grey[300])!,
+                            width: 1,
                           ),
                         ),
-                  onPressed: !_loading
-                      ? () {
-                          // ignore: unnecessary_null_comparison
-                          if (firebaseUser == null) {
-                            showModalBottomSheet(
-                              shape: const RoundedRectangleBorder(
-                                //the rounded corner is created here
-                                borderRadius: BorderRadius.only(
-                                  topLeft: Radius.circular(20),
-                                  topRight: Radius.circular(20),
+                      ),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceAround,
+                        children: [
+                          Directionality(
+                            textDirection: TextDirection.rtl,
+                            child: ElevatedButton.icon(
+                              style: ElevatedButton.styleFrom(
+                                primary: Colors.white,
+                                elevation: 0,
+                                padding: const EdgeInsetsDirectional.fromSTEB(
+                                    30, 10, 30, 10),
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(50),
                                 ),
                               ),
-                              context: context,
-                              builder: (context) {
-                                return const SignInSheet();
+                              onPressed: () {
+                                // TODO:
+                                Share.share("Product Name");
                               },
-                            );
-                          } else {
-                            try {
-                              // set _loading to true
-                              setState(() {
-                                _loading = true;
-                              });
-                              addToCart
-                                  .addToCart(
-                                product.productId,
-                                product.name,
-                                product.price,
-                                product.supplierId,
-                                firebaseUser.uid,
-                                product.imageUrl,
-                              )
-                                  .then((value) {
-                                // set _loading to false
-                                setState(() {
-                                  _loading = false;
-                                });
-                                ScaffoldMessenger.of(context).showSnackBar(
-                                  const SnackBar(
-                                    behavior: SnackBarBehavior.floating,
-                                    content: Text("Product added to cart"),
-                                  ),
-                                );
-                              });
-                            } catch (e) {
-                              ScaffoldMessenger.of(context).showSnackBar(
-                                const SnackBar(
-                                  behavior: SnackBarBehavior.floating,
-                                  content: Text(
-                                      "Something went wrong please try later."),
+                              icon: Container(
+                                padding: const EdgeInsets.all(3),
+                                decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(50),
+                                  color: Colors.grey[400],
                                 ),
-                              );
-                            }
-                          }
-                        }
-                      : null,
-                ),
-              ),
-            ],
-          ),
+                                child: const Icon(
+                                  Icons.arrow_upward,
+                                  color: Colors.white,
+                                ),
+                              ),
+                              label: const Text(
+                                "SHARE THIS",
+                                style: TextStyle(
+                                  color: Colors.black54,
+                                ),
+                              ),
+                            ),
+                          ),
+                          Directionality(
+                            textDirection: TextDirection.rtl,
+                            child: ElevatedButton.icon(
+                                style: ElevatedButton.styleFrom(
+                                  primary: Theme.of(context).primaryColor,
+                                  elevation: 0,
+                                  padding: const EdgeInsetsDirectional.fromSTEB(
+                                      30, 10, 30, 10),
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(50),
+                                  ),
+                                ),
+                                icon: Container(
+                                  padding: const EdgeInsets.all(3),
+                                  decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(50),
+                                    color: Colors.white,
+                                  ),
+                                  child: Icon(
+                                    Icons.chevron_left,
+                                    color: Theme.of(context).primaryColor,
+                                  ),
+                                ),
+                                label: const Text(
+                                  "CHEKOUT",
+                                  // style: TextStyle(
+                                  //   color: Colors.black54,
+                                  // ),
+                                ),
+                                onPressed: () {
+                                  // ignore: unnecessary_null_comparison
+                                  if (firebaseUser == null) {
+                                    showModalBottomSheet(
+                                      shape: const RoundedRectangleBorder(
+                                        //the rounded corner is created here
+                                        borderRadius: BorderRadius.only(
+                                          topLeft: Radius.circular(20),
+                                          topRight: Radius.circular(20),
+                                        ),
+                                      ),
+                                      context: context,
+                                      builder: (context) {
+                                        return const SignInSheet();
+                                      },
+                                    );
+                                  } else {
+                                    Navigator.pushNamed(
+                                        context, '/select-payment');
+                                  }
+                                }),
+                          ),
+                        ],
+                      ),
+                    )
+                  : Container(
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 10, vertical: 15),
+                      decoration: BoxDecoration(
+                        border: Border(
+                          top: BorderSide(
+                            color: (Colors.grey[300])!,
+                            width: 1,
+                          ),
+                        ),
+                      ),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceAround,
+                        children: [
+                          Directionality(
+                            textDirection: TextDirection.rtl,
+                            child: ElevatedButton.icon(
+                              style: ElevatedButton.styleFrom(
+                                primary: Colors.white,
+                                elevation: 0,
+                                padding: const EdgeInsetsDirectional.fromSTEB(
+                                    30, 10, 30, 10),
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(50),
+                                ),
+                              ),
+                              onPressed: () {
+                                // TODO:
+                                Share.share("Product Name");
+                              },
+                              icon: Container(
+                                padding: const EdgeInsets.all(3),
+                                decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(50),
+                                  color: Colors.grey[400],
+                                ),
+                                child: const Icon(
+                                  Icons.arrow_upward,
+                                  color: Colors.white,
+                                ),
+                              ),
+                              label: const Text(
+                                "SHARE THIS",
+                                style: TextStyle(
+                                  color: Colors.black54,
+                                ),
+                              ),
+                            ),
+                          ),
+                          Directionality(
+                            textDirection: TextDirection.rtl,
+                            child: ElevatedButton.icon(
+                              style: ElevatedButton.styleFrom(
+                                primary: Theme.of(context).primaryColor,
+                                elevation: 0,
+                                padding: const EdgeInsetsDirectional.fromSTEB(
+                                    30, 10, 30, 10),
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(50),
+                                ),
+                              ),
+                              icon: Container(
+                                padding: const EdgeInsets.all(3),
+                                decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(50),
+                                  color: Colors.white,
+                                ),
+                                child: Icon(
+                                  Icons.chevron_left,
+                                  color: Theme.of(context).primaryColor,
+                                ),
+                              ),
+                              label: !_loading
+                                  ? const Text("ADD TO CART")
+                                  : const Text(
+                                      "...ADDING",
+                                      style: TextStyle(
+                                        color: Colors.black54,
+                                      ),
+                                    ),
+                              onPressed: !_loading
+                                  ? () {
+                                      // ignore: unnecessary_null_comparison
+                                      if (firebaseUser == null) {
+                                        showModalBottomSheet(
+                                          shape: const RoundedRectangleBorder(
+                                            //the rounded corner is created here
+                                            borderRadius: BorderRadius.only(
+                                              topLeft: Radius.circular(20),
+                                              topRight: Radius.circular(20),
+                                            ),
+                                          ),
+                                          context: context,
+                                          builder: (context) {
+                                            return const SignInSheet();
+                                          },
+                                        );
+                                      } else {
+                                        log(isExist.toString());
+                                        if (!isExist) {
+                                          showDialog(
+                                            context: context,
+                                            builder: (context) {
+                                              return AlertDialog(
+                                                title: const Text("Attention"),
+                                                content: const Text(
+                                                    "You have 1 Product in your cart already. To make delivery faster for your customer, only 1 order is allow at a time.\n\nDo you want to continue?"),
+                                                actions: <Widget>[
+                                                  TextButton(
+                                                    child: const Text("Yes"),
+                                                    onPressed: () {
+                                                      Navigator.pop(context);
+                                                      try {
+                                                        // set _loading to true
+                                                        setState(() {
+                                                          _loading = true;
+                                                        });
+                                                        // add to cart
+                                                        addToCart
+                                                            .clearCart(
+                                                                firebaseUser
+                                                                    .uid)!
+                                                            .then((value) {
+                                                          addToCart
+                                                              .addToCart(
+                                                            product.productId,
+                                                            product.name,
+                                                            product.price,
+                                                            product.supplierId,
+                                                            firebaseUser.uid,
+                                                            product.imageUrl,
+                                                          )
+                                                              .then((value) {
+                                                            // set _loading to false
+                                                            setState(() {
+                                                              _loading = false;
+                                                            });
+                                                            ScaffoldMessenger
+                                                                    .of(context)
+                                                                .showSnackBar(
+                                                              const SnackBar(
+                                                                behavior:
+                                                                    SnackBarBehavior
+                                                                        .floating,
+                                                                content: Text(
+                                                                    "Product added to cart"),
+                                                              ),
+                                                            );
+                                                          });
+                                                        });
+                                                      } catch (e) {
+                                                        ScaffoldMessenger.of(
+                                                                context)
+                                                            .showSnackBar(
+                                                          const SnackBar(
+                                                            behavior:
+                                                                SnackBarBehavior
+                                                                    .floating,
+                                                            content: Text(
+                                                                "Something went wrong please try later."),
+                                                          ),
+                                                        );
+                                                      }
+                                                    },
+                                                  ),
+                                                  TextButton(
+                                                    child: const Text("No"),
+                                                    onPressed: () {
+                                                      Navigator.pop(context);
+                                                    },
+                                                  ),
+                                                ],
+                                              );
+                                            },
+                                          );
+                                        } else {
+                                          try {
+                                            // set _loading to true
+                                            setState(() {
+                                              _loading = true;
+                                            });
+                                            // add to cart
+                                            addToCart
+                                                .addToCart(
+                                              product.productId,
+                                              product.name,
+                                              product.price,
+                                              product.supplierId,
+                                              firebaseUser.uid,
+                                              product.imageUrl,
+                                            )
+                                                .then((value) {
+                                              // set _loading to false
+                                              setState(() {
+                                                _loading = false;
+                                              });
+                                              ScaffoldMessenger.of(context)
+                                                  .showSnackBar(
+                                                const SnackBar(
+                                                  behavior:
+                                                      SnackBarBehavior.floating,
+                                                  content: Text(
+                                                      "Product added to cart"),
+                                                ),
+                                              );
+                                            });
+                                          } catch (e) {
+                                            ScaffoldMessenger.of(context)
+                                                .showSnackBar(
+                                              const SnackBar(
+                                                behavior:
+                                                    SnackBarBehavior.floating,
+                                                content: Text(
+                                                    "Something went wrong please try later."),
+                                              ),
+                                            );
+                                          }
+                                        }
+                                      }
+                                    }
+                                  : null,
+                            ),
+                          ),
+                        ],
+                      ),
+                    );
+            }
+            if (snapshot.hasError) {
+              return Text('Error: ${snapshot.error}');
+            }
+            return const Text("Add to cart");
+          },
         ),
+        // child: Container(
+        //   padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 15),
+        //   decoration: BoxDecoration(
+        //     border: Border(
+        //       top: BorderSide(
+        //         color: (Colors.grey[300])!,
+        //         width: 1,
+        //       ),
+        //     ),
+        //   ),
+        //   child: Row(
+        //     mainAxisAlignment: MainAxisAlignment.spaceAround,
+        //     children: [
+        //       Directionality(
+        //         textDirection: TextDirection.rtl,
+        //         child: ElevatedButton.icon(
+        //           style: ElevatedButton.styleFrom(
+        //             primary: Colors.white,
+        //             elevation: 0,
+        //             padding:
+        //                 const EdgeInsetsDirectional.fromSTEB(30, 10, 30, 10),
+        //             shape: RoundedRectangleBorder(
+        //               borderRadius: BorderRadius.circular(50),
+        //             ),
+        //           ),
+        //           onPressed: () {
+        //             // TODO:
+        //             Share.share("Product Name");
+        //           },
+        //           icon: Container(
+        //             padding: const EdgeInsets.all(3),
+        //             decoration: BoxDecoration(
+        //               borderRadius: BorderRadius.circular(50),
+        //               color: Colors.grey[400],
+        //             ),
+        //             child: const Icon(
+        //               Icons.arrow_upward,
+        //               color: Colors.white,
+        //             ),
+        //           ),
+        //           label: const Text(
+        //             "SHARE THIS",
+        //             style: TextStyle(
+        //               color: Colors.black54,
+        //             ),
+        //           ),
+        //         ),
+        //       ),
+        //       Directionality(
+        //         textDirection: TextDirection.rtl,
+        //         child: ElevatedButton.icon(
+        //           style: ElevatedButton.styleFrom(
+        //             primary: Theme.of(context).primaryColor,
+        //             elevation: 0,
+        //             padding:
+        //                 const EdgeInsetsDirectional.fromSTEB(30, 10, 30, 10),
+        //             shape: RoundedRectangleBorder(
+        //               borderRadius: BorderRadius.circular(50),
+        //             ),
+        //           ),
+        //           icon: Container(
+        //             padding: const EdgeInsets.all(3),
+        //             decoration: BoxDecoration(
+        //               borderRadius: BorderRadius.circular(50),
+        //               color: Colors.white,
+        //             ),
+        //             child: Icon(
+        //               Icons.chevron_left,
+        //               color: Theme.of(context).primaryColor,
+        //             ),
+        //           ),
+        //           label: !_loading
+        //               ? const Text("ADD TO CART")
+        //               : const Text(
+        //                   "...ADDING",
+        //                   style: TextStyle(
+        //                     color: Colors.black54,
+        //                   ),
+        //                 ),
+        //           onPressed: !_loading
+        //               ? () {
+        //                   // ignore: unnecessary_null_comparison
+        //                   if (firebaseUser == null) {
+        //                     showModalBottomSheet(
+        //                       shape: const RoundedRectangleBorder(
+        //                         //the rounded corner is created here
+        //                         borderRadius: BorderRadius.only(
+        //                           topLeft: Radius.circular(20),
+        //                           topRight: Radius.circular(20),
+        //                         ),
+        //                       ),
+        //                       context: context,
+        //                       builder: (context) {
+        //                         return const SignInSheet();
+        //                       },
+        //                     );
+        //                   } else {
+        //                     try {
+        //                       // set _loading to true
+        //                       setState(() {
+        //                         _loading = true;
+        //                       });
+        //                       addToCart
+        //                           .addToCart(
+        //                         product.productId,
+        //                         product.name,
+        //                         product.price,
+        //                         product.supplierId,
+        //                         firebaseUser.uid,
+        //                         product.imageUrl,
+        //                       )
+        //                           .then((value) {
+        //                         // set _loading to false
+        //                         setState(() {
+        //                           _loading = false;
+        //                         });
+        //                         ScaffoldMessenger.of(context).showSnackBar(
+        //                           const SnackBar(
+        //                             behavior: SnackBarBehavior.floating,
+        //                             content: Text("Product added to cart"),
+        //                           ),
+        //                         );
+        //                       });
+        //                     } catch (e) {
+        //                       ScaffoldMessenger.of(context).showSnackBar(
+        //                         const SnackBar(
+        //                           behavior: SnackBarBehavior.floating,
+        //                           content: Text(
+        //                               "Something went wrong please try later."),
+        //                         ),
+        //                       );
+        //                     }
+        //                   }
+        //                 }
+        //               : null,
+        //         ),
+        //       ),
+        //     ],
+        //   ),
+        // ),
       ),
     );
   }
