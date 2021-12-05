@@ -313,7 +313,8 @@ class _ProductDetailsState extends State<ProductDetails> {
       bottomNavigationBar: BottomAppBar(
         color: const Color(0xffF5F6F8),
         child: firebaseUser != null
-            ? StreamBuilder<bool>( // TODO : 
+            ? StreamBuilder<bool>(
+                // TODO :
                 stream: addToCart.checkIfProductExists(
                     product.productId, firebaseUser.uid),
                 builder: (context, snapshot) {
@@ -349,7 +350,6 @@ class _ProductDetailsState extends State<ProductDetails> {
                                       ),
                                     ),
                                     onPressed: () {
-                                      // TODO:
                                       Share.share("Product Name");
                                     },
                                     icon: Container(
@@ -455,7 +455,6 @@ class _ProductDetailsState extends State<ProductDetails> {
                                       ),
                                     ),
                                     onPressed: () {
-                                      // TODO:
                                       Share.share("Product Name");
                                     },
                                     icon: Container(
@@ -614,7 +613,6 @@ class _ProductDetailsState extends State<ProductDetails> {
                           ),
                         ),
                         onPressed: () {
-                          // TODO:
                           Share.share("Product Name");
                         },
                         icon: Container(
@@ -731,147 +729,6 @@ class _ProductDetailsState extends State<ProductDetails> {
                   ],
                 ),
               ),
-
-        // child: Container(
-        //   padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 15),
-        //   decoration: BoxDecoration(
-        //     border: Border(
-        //       top: BorderSide(
-        //         color: (Colors.grey[300])!,
-        //         width: 1,
-        //       ),
-        //     ),
-        //   ),
-        //   child: Row(
-        //     mainAxisAlignment: MainAxisAlignment.spaceAround,
-        //     children: [
-        //       Directionality(
-        //         textDirection: TextDirection.rtl,
-        //         child: ElevatedButton.icon(
-        //           style: ElevatedButton.styleFrom(
-        //             primary: Colors.white,
-        //             elevation: 0,
-        //             padding:
-        //                 const EdgeInsetsDirectional.fromSTEB(30, 10, 30, 10),
-        //             shape: RoundedRectangleBorder(
-        //               borderRadius: BorderRadius.circular(50),
-        //             ),
-        //           ),
-        //           onPressed: () {
-        //             // TODO:
-        //             Share.share("Product Name");
-        //           },
-        //           icon: Container(
-        //             padding: const EdgeInsets.all(3),
-        //             decoration: BoxDecoration(
-        //               borderRadius: BorderRadius.circular(50),
-        //               color: Colors.grey[400],
-        //             ),
-        //             child: const Icon(
-        //               Icons.arrow_upward,
-        //               color: Colors.white,
-        //             ),
-        //           ),
-        //           label: const Text(
-        //             "SHARE THIS",
-        //             style: TextStyle(
-        //               color: Colors.black54,
-        //             ),
-        //           ),
-        //         ),
-        //       ),
-        //       Directionality(
-        //         textDirection: TextDirection.rtl,
-        //         child: ElevatedButton.icon(
-        //           style: ElevatedButton.styleFrom(
-        //             primary: Theme.of(context).primaryColor,
-        //             elevation: 0,
-        //             padding:
-        //                 const EdgeInsetsDirectional.fromSTEB(30, 10, 30, 10),
-        //             shape: RoundedRectangleBorder(
-        //               borderRadius: BorderRadius.circular(50),
-        //             ),
-        //           ),
-        //           icon: Container(
-        //             padding: const EdgeInsets.all(3),
-        //             decoration: BoxDecoration(
-        //               borderRadius: BorderRadius.circular(50),
-        //               color: Colors.white,
-        //             ),
-        //             child: Icon(
-        //               Icons.chevron_left,
-        //               color: Theme.of(context).primaryColor,
-        //             ),
-        //           ),
-        //           label: !_loading
-        //               ? const Text("ADD TO CART")
-        //               : const Text(
-        //                   "...ADDING",
-        //                   style: TextStyle(
-        //                     color: Colors.black54,
-        //                   ),
-        //                 ),
-        //           onPressed: !_loading
-        //               ? () {
-        //                   // ignore: unnecessary_null_comparison
-        //                   if (firebaseUser == null) {
-        //                     showModalBottomSheet(
-        //                       shape: const RoundedRectangleBorder(
-        //                         //the rounded corner is created here
-        //                         borderRadius: BorderRadius.only(
-        //                           topLeft: Radius.circular(20),
-        //                           topRight: Radius.circular(20),
-        //                         ),
-        //                       ),
-        //                       context: context,
-        //                       builder: (context) {
-        //                         return const SignInSheet();
-        //                       },
-        //                     );
-        //                   } else {
-        //                     try {
-        //                       // set _loading to true
-        //                       setState(() {
-        //                         _loading = true;
-        //                       });
-        //                       addToCart
-        //                           .addToCart(
-        //                         product.productId,
-        //                         product.name,
-        //                         product.price,
-        //                         product.supplierId,
-        //                         firebaseUser.uid,
-        //                         product.imageUrl,
-        //                       )
-        //                           .then((value) {
-        //                         // set _loading to false
-        //                         setState(() {
-        //                           _loading = false;
-        //                         });
-        //                         ScaffoldMessenger.of(context).showSnackBar(
-        //                           const SnackBar(
-        //                             behavior: SnackBarBehavior.floating,
-        //                             content: Text("Product added to cart"),
-        //                           ),
-        //                         );
-        //                       });
-        //                     } catch (e) {
-        //                       ScaffoldMessenger.of(context).showSnackBar(
-        //                         const SnackBar(
-        //                           behavior: SnackBarBehavior.floating,
-        //                           content: Text(
-        //                               "Something went wrong please try later."),
-        //                         ),
-        //                       );
-        //                     }
-        //                   }
-        //                 }
-        //               : null,
-        //         ),
-        //       ),
-        //     ],
-        //   ),
-        // ),
       ),
     );
   }
