@@ -167,130 +167,124 @@ class Home extends StatelessWidget {
               ),
               itemBuilder: (context, documentSnapshots, index) {
                 final data = documentSnapshots[index].data() as Map?;
-                return Column(
-                  children: [
-                    GestureDetector(
-                      onTap: () {
-                        Navigator.pushNamed(context, '/product-detail',
-                            arguments: ProductArguments(
-                              documentSnapshots[index].id,
-                              data!["productName"],
-                              double.parse(data["price"]),
-                              data["supplier_id"],
-                              data['image'][0],
-                            ));
-                      },
-                      child: Container(
-                        margin: const EdgeInsets.all(2),
-                        decoration: BoxDecoration(
-                          color: Colors.white,
-                          borderRadius: BorderRadius.circular(5),
-                          border: Border.all(
-                            color: Colors.black12,
+                return GestureDetector(
+                  onTap: () {
+                    Navigator.pushNamed(context, '/product-detail',
+                        arguments: ProductArguments(
+                          documentSnapshots[index].id,
+                          data!["productName"],
+                          double.parse(data["price"]),
+                          data["supplier_id"],
+                          data['image'][0],
+                        ));
+                  },
+                  child: Container(
+                    margin: const EdgeInsets.all(2),
+                    decoration: BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.circular(5),
+                      border: Border.all(
+                        color: Colors.black12,
+                      ),
+                    ),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        CarouselSlider(
+                          options: CarouselOptions(
+                            height: 180,
+                            enableInfiniteScroll: false,
+                            viewportFraction: 1,
                           ),
-                        ),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            CarouselSlider(
-                              options: CarouselOptions(
-                                height: 180,
-                                enableInfiniteScroll: false,
-                                viewportFraction: 1,
-                              ),
-                              items: data!['image'].map<Widget>((i) {
-                                return Builder(
-                                  builder: (BuildContext context) {
-                                    return SizedBox(
-                                      width: MediaQuery.of(context).size.width,
-                                      child: ClipRRect(
-                                        borderRadius:
-                                            const BorderRadius.vertical(
-                                          top: Radius.circular(5),
-                                        ),
-                                        child: CachedNetworkImage(
-                                          imageUrl: i,
-                                          fit: BoxFit.cover,
-                                        ),
-                                      ),
-                                    );
-                                  },
-                                );
-                              }).toList(),
-                            ),
-                            Container(
-                              padding: const EdgeInsets.all(10),
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Text(
-                                    data['productName'],
-                                    maxLines: 1,
-                                    style: const TextStyle(
-                                      fontSize: 12,
-                                      color: Colors.black54,
+                          items: data!['image'].map<Widget>((i) {
+                            return Builder(
+                              builder: (BuildContext context) {
+                                return SizedBox(
+                                  width: MediaQuery.of(context).size.width,
+                                  child: ClipRRect(
+                                    borderRadius: const BorderRadius.vertical(
+                                      top: Radius.circular(5),
+                                    ),
+                                    child: CachedNetworkImage(
+                                      imageUrl: i,
+                                      fit: BoxFit.cover,
                                     ),
                                   ),
-                                  // price
-                                  Row(
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceBetween,
-                                    children: [
-                                      Text(
-                                        'Rs. ${data['price']}',
-                                        style: const TextStyle(
-                                          fontSize: 18,
-                                          fontWeight: FontWeight.w500,
-                                          color: Colors.black87,
-                                        ),
-                                      ),
-                                      IconButton(
-                                        onPressed: () {
-                                          Share.share(
-                                            data['productName'],
-                                          );
-                                        },
-                                        icon: const Icon(
-                                          Icons.share_outlined,
-                                          size: 22,
-                                        ),
-                                      ),
-                                    ],
+                                );
+                              },
+                            );
+                          }).toList(),
+                        ),
+                        Container(
+                          padding: const EdgeInsets.all(10),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                data['productName'],
+                                maxLines: 1,
+                                style: const TextStyle(
+                                  fontSize: 12,
+                                  color: Colors.black54,
+                                ),
+                              ),
+                              // price
+                              Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                children: [
+                                  Text(
+                                    'Rs. ${data['price']}',
+                                    style: const TextStyle(
+                                      fontSize: 18,
+                                      fontWeight: FontWeight.w500,
+                                      color: Colors.black87,
+                                    ),
                                   ),
-                                  Row(
-                                    children: [
-                                      Container(
-                                        padding: const EdgeInsets.symmetric(
-                                          horizontal: 8,
-                                          vertical: 2,
-                                        ),
-                                        decoration: BoxDecoration(
-                                          color: Colors.green,
-                                          borderRadius:
-                                              BorderRadius.circular(10),
-                                        ),
-                                        child: const Text(
-                                          "4.8",
-                                          style: TextStyle(
-                                            fontSize: 12,
-                                            color: Colors.white,
-                                          ),
-                                        ),
-                                      ),
-                                      const SizedBox(
-                                        width: 2,
-                                      ),
-                                      const Text("Ratings"),
-                                    ],
+                                  IconButton(
+                                    onPressed: () {
+                                      Share.share(
+                                        data['productName'],
+                                      );
+                                    },
+                                    icon: const Icon(
+                                      Icons.share_outlined,
+                                      size: 22,
+                                    ),
                                   ),
                                 ],
                               ),
-                            ),
-                          ],
+                              Row(
+                                children: [
+                                  Container(
+                                    padding: const EdgeInsets.symmetric(
+                                      horizontal: 8,
+                                      vertical: 2,
+                                    ),
+                                    decoration: BoxDecoration(
+                                      color: Colors.green,
+                                      borderRadius: BorderRadius.circular(10),
+                                    ),
+                                    child: const Text(
+                                      "4.8",
+                                      style: TextStyle(
+                                        fontSize: 12,
+                                        color: Colors.white,
+                                      ),
+                                    ),
+                                  ),
+                                  const SizedBox(
+                                    width: 2,
+                                  ),
+                                  const Text("Ratings"),
+                                ],
+                              ),
+                            ],
+                          ),
                         ),
-                      ),
+                      ],
                     ),
-                  ],
+                  ),
                 );
               },
               // orderBy is compulsory to enable pagination
