@@ -524,125 +524,46 @@ class _ProductDetailsState extends State<ProductDetails> {
                                           },
                                         );
                                       } else {
-                                        log(isExist.toString());
-                                        if (!isExist) {
-                                          showDialog(
-                                            context: context,
-                                            builder: (context) {
-                                              return AlertDialog(
-                                                title: const Text("Attention"),
-                                                content: const Text(
-                                                    "You have 1 Product in your cart already. To make delivery faster for your customer, only 1 order is allow at a time.\n\nDo you want to continue?"),
-                                                actions: <Widget>[
-                                                  TextButton(
-                                                    child: const Text("Yes"),
-                                                    onPressed: () {
-                                                      Navigator.pop(context);
-                                                      try {
-                                                        // set _loading to true
-                                                        setState(() {
-                                                          _loading = true;
-                                                        });
-                                                        // add to cart
-                                                        addToCart
-                                                            .clearCart(
-                                                                firebaseUser
-                                                                    .uid)!
-                                                            .then((value) {
-                                                          addToCart
-                                                              .addToCart(
-                                                            product.productId,
-                                                            product.name,
-                                                            product.price,
-                                                            product.supplierId,
-                                                            firebaseUser.uid,
-                                                            product.imageUrl,
-                                                          )
-                                                              .then((value) {
-                                                            // set _loading to false
-                                                            setState(() {
-                                                              _loading = false;
-                                                            });
-                                                            ScaffoldMessenger
-                                                                    .of(context)
-                                                                .showSnackBar(
-                                                              const SnackBar(
-                                                                behavior:
-                                                                    SnackBarBehavior
-                                                                        .floating,
-                                                                content: Text(
-                                                                    "Product added to cart"),
-                                                              ),
-                                                            );
-                                                          });
-                                                        });
-                                                      } catch (e) {
-                                                        ScaffoldMessenger.of(
-                                                                context)
-                                                            .showSnackBar(
-                                                          const SnackBar(
-                                                            behavior:
-                                                                SnackBarBehavior
-                                                                    .floating,
-                                                            content: Text(
-                                                                "Something went wrong please try later."),
-                                                          ),
-                                                        );
-                                                      }
-                                                    },
-                                                  ),
-                                                  TextButton(
-                                                    child: const Text("No"),
-                                                    onPressed: () {
-                                                      Navigator.pop(context);
-                                                    },
-                                                  ),
-                                                ],
-                                              );
-                                            },
-                                          );
-                                        } else {
-                                          try {
-                                            // set _loading to true
+                                        try {
+                                          // set _loading to true
+                                          setState(() {
+                                            _loading = true;
+                                          });
+                                          // add to cart
+                                          addToCart
+                                              .addToCart(
+                                            product.productId,
+                                            product.name,
+                                            product.price,
+                                            product.supplierId,
+                                            firebaseUser.uid,
+                                            product.imageUrl,
+                                          )
+                                              .then((value) {
+                                            // set _loading to false
                                             setState(() {
-                                              _loading = true;
+                                              _loading = false;
                                             });
-                                            // add to cart
-                                            addToCart
-                                                .addToCart(
-                                              product.productId,
-                                              product.name,
-                                              product.price,
-                                              product.supplierId,
-                                              firebaseUser.uid,
-                                              product.imageUrl,
-                                            )
-                                                .then((value) {
-                                              // set _loading to false
-                                              setState(() {
-                                                _loading = false;
-                                              });
-                                              ScaffoldMessenger.of(context)
-                                                  .showSnackBar(
-                                                const SnackBar(
-                                                  behavior:
-                                                      SnackBarBehavior.floating,
-                                                  content: Text(
-                                                      "Product added to cart"),
-                                                ),
-                                              );
-                                            });
-                                          } catch (e) {
                                             ScaffoldMessenger.of(context)
                                                 .showSnackBar(
                                               const SnackBar(
                                                 behavior:
                                                     SnackBarBehavior.floating,
                                                 content: Text(
-                                                    "Something went wrong please try later."),
+                                                    "Product added to cart"),
                                               ),
                                             );
-                                          }
+                                          });
+                                        } catch (e) {
+                                          ScaffoldMessenger.of(context)
+                                              .showSnackBar(
+                                            const SnackBar(
+                                              behavior:
+                                                  SnackBarBehavior.floating,
+                                              content: Text(
+                                                  "Something went wrong please try later."),
+                                            ),
+                                          );
                                         }
                                       }
                                     }
@@ -659,6 +580,7 @@ class _ProductDetailsState extends State<ProductDetails> {
             return const Text("Add to cart");
           },
         ),
+
         // child: Container(
         //   padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 15),
         //   decoration: BoxDecoration(

@@ -25,58 +25,58 @@ class Cart with ChangeNotifier {
     notifyListeners();
   }
 
-  // add to cart and allow only one item in cart for each user id firebase collection
-  Future<void> addToCart(String productId, String name, double price,
-      String supplierId, String userId, String imageUrl) async {
-    log('addToCart');
-    final querySnapshot = await FirebaseFirestore.instance
-        .collection('cart')
-        .where('userId', isEqualTo: userId)
-        .get();
-    if (querySnapshot.docs.isEmpty) {
-      await FirebaseFirestore.instance.collection('cart').doc("cartId").set({
-        'userId': userId,
-        'productId': productId,
-        'name': name,
-        'price': price,
-        'image': imageUrl,
-        'quantity': 1,
-        'supplierId': supplierId,
-      });
-    }
-    notifyListeners();
-  }
-
+  // // add to cart and allow only one item in cart for each user id firebase collection
   // Future<void> addToCart(String productId, String name, double price,
   //     String supplierId, String userId, String imageUrl) async {
-  //   CollectionReference cartRef = FirebaseFirestore.instance.collection('cart');
-  //   DocumentReference cartDocRef = cartRef.doc(productId);
-
-  //   // check if product already exists in cart
-  //   DocumentSnapshot cartDocSnapshot = await cartDocRef.get();
-
-  //   if (cartDocSnapshot.exists) {
-  //     // product already exists in cart
-  //     // update quantity
-  //     int quantity = (cartDocSnapshot.data() as dynamic)['quantity'];
-  //     await cartDocRef.update({
-  //       'quantity': quantity + 1,
-  //     }).then((value) => log('updated cart'));
-  //   } else {
-  //     // product does not exist in cart
-  //     // add product to cart
-  //     await cartDocRef.set({
-  //       'cartId': cartDocRef.id,
+  //   log('addToCart');
+  //   final querySnapshot = await FirebaseFirestore.instance
+  //       .collection('cart')
+  //       .where('userId', isEqualTo: userId)
+  //       .get();
+  //   if (querySnapshot.docs.isEmpty) {
+  //     await FirebaseFirestore.instance.collection('cart').doc("cartId").set({
+  //       'userId': userId,
   //       'productId': productId,
-  //       "userId": userId,
   //       'name': name,
   //       'price': price,
+  //       'image': imageUrl,
   //       'quantity': 1,
   //       'supplierId': supplierId,
-  //       'image': imageUrl,
-  //     }).then((value) => log('added to cart'));
+  //     });
   //   }
+  //   notifyListeners();
   // }
+
+  Future<void> addToCart(String productId, String name, double price,
+      String supplierId, String userId, String imageUrl) async {
+    CollectionReference cartRef = FirebaseFirestore.instance.collection('cart');
+    DocumentReference cartDocRef = cartRef.doc(productId);
+
+    // check if product already exists in cart
+    DocumentSnapshot cartDocSnapshot = await cartDocRef.get();
+
+    if (cartDocSnapshot.exists) {
+      // product already exists in cart
+      // update quantity
+      int quantity = (cartDocSnapshot.data() as dynamic)['quantity'];
+      await cartDocRef.update({
+        'quantity': quantity + 1,
+      }).then((value) => log('updated cart'));
+    } else {
+      // product does not exist in cart
+      // add product to cart
+      await cartDocRef.set({
+        'cartId': cartDocRef.id,
+        'productId': productId,
+        "userId": userId,
+        'name': name,
+        'price': price,
+        'quantity': 1,
+        'supplierId': supplierId,
+        'image': imageUrl,
+      }).then((value) => log('added to cart'));
+    }
+  }
 
   // get cart items from firebase
   Stream<List<CartItem>> getCartItems(String userId) {

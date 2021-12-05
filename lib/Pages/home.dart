@@ -157,6 +157,14 @@ class Home extends StatelessWidget {
             const SizedBox(height: 10),
             PaginateFirestore(
               onEmpty: const Text("Something went wrong."),
+              initialLoader: SizedBox(
+                width: 20,
+                height: 20,
+                child: CircularProgressIndicator(
+                  strokeWidth: 2,
+                  color: Theme.of(context).primaryColor,
+                ),
+              ),
               itemBuilderType:
                   PaginateBuilderType.gridView, //Change types accordingly
               shrinkWrap: true,
