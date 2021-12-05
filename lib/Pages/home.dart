@@ -143,7 +143,7 @@ class Home extends StatelessWidget {
         child: Column(
           children: [
             const SizedBox(height: 10),
-            const CarouselSliderMain(),
+            CarouselSliderMain(),
             const SizedBox(height: 10),
             const Divider(),
             // filter icon and dropdown
