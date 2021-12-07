@@ -7,6 +7,12 @@ import 'package:flutter/cupertino.dart';
 class Cart with ChangeNotifier {
   // list of cart items doc id
   List<String> _cartIds = [];
+  // list of cart items
+  List<CartItem> _cartItems = [];
+  // get cart items
+  List<CartItem> get cartItems {
+    return [..._cartItems];
+  }
 
   // get list of doc id of cart items
   List<String> get cartIds {
@@ -50,7 +56,7 @@ class Cart with ChangeNotifier {
   Future<void> addToCart(String productId, String name, double price,
       String supplierId, String userId, String imageUrl) async {
     CollectionReference cartRef = FirebaseFirestore.instance.collection('cart');
-    DocumentReference cartDocRef = cartRef.doc(productId);
+    DocumentReference cartDocRef = cartRef.doc();
 
     // check if product already exists in cart
     DocumentSnapshot cartDocSnapshot = await cartDocRef.get();

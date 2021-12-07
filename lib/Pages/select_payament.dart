@@ -27,8 +27,15 @@ class _SelectPaymentState extends State<SelectPayment> {
   int radioValue = -1;
   double _margin = 0.0;
   String _selectedAddress = '';
+  String _customerName = '';
+  String _address = '';
+  String _phone = '';
+  String _city = '';
+  String _state = '';
+  String _zip = '';
   bool _placeOrder = false;
   bool isLoading = false;
+
   PaymentMethod? _paymentMethod = PaymentMethod.cashOnDelivery;
   @override
   Widget build(BuildContext context) {
@@ -94,7 +101,16 @@ class _SelectPaymentState extends State<SelectPayment> {
                         _placeOrder = true;
                       });
                       cart.getDocIds(firebaseUser!.uid).then((_) {
-                        placeOrder.addOrder(firebaseUser.uid, 'cartId');
+                        placeOrder.addOrder(
+                          firebaseUser.uid,
+                          cart.cartIds,
+                          _customerName,
+                          _address,
+                          _city,
+                          _state,
+                          _zip,
+                          _phone,
+                        );
                       }).then((value) {
                         cart.clearCart(firebaseUser.uid);
                         Navigator.pushNamed(context, '/order-confirmed');
@@ -432,6 +448,12 @@ class _SelectPaymentState extends State<SelectPayment> {
                           setState(() {
                             radioValue = ind!;
                             _selectedAddress = address[index].id;
+                            _customerName = address[index].customerName;
+                            _city = address[index].city;
+                            _address = address[index].address;
+                            _phone = address[index].phone;
+                            _zip = address[index].zipCode;
+                            _state = address[index].state;
                           });
                           log(_selectedAddress);
                         },
