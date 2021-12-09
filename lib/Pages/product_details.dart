@@ -413,7 +413,8 @@ class _ProductDetailsState extends State<ProductDetails> {
                               },
                             );
                           } else {
-                            if (!addToCart.getCartItemId(product.productId)) {
+                            if (addToCart.getCartItemId(product.productId) ||
+                                addToCart.cartItemId.isNotEmpty) {
                               log("cart is not empty");
                               showDialog(
                                   context: context,

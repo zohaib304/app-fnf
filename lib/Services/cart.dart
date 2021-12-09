@@ -112,6 +112,7 @@ class Cart with ChangeNotifier {
             price: data["price"],
             quantity: data['quantity'],
             image: data['image'],
+            supplierId: data['supplierId'],
           );
         },
       ).toList()),

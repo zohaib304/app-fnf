@@ -33,6 +33,7 @@ class _SelectPaymentState extends State<SelectPayment> {
   String _city = '';
   String _state = '';
   String _zip = '';
+  String _supplierId = '';
   bool _placeOrder = false;
   bool isLoading = false;
 
@@ -102,13 +103,14 @@ class _SelectPaymentState extends State<SelectPayment> {
                       cart.getDocIds(firebaseUser!.uid).then((_) {
                         placeOrder.addOrder(
                           firebaseUser.uid,
-                          cart.cartIds,
+                          cart.cartItemId,
                           _customerName,
                           _address,
                           _city,
                           _state,
                           _zip,
                           _phone,
+                          _supplierId,
                         );
                       }).then((value) {
                         cart.clearCart(firebaseUser.uid);
@@ -136,7 +138,7 @@ class _SelectPaymentState extends State<SelectPayment> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 RadioListTile<PaymentMethod>(
-                  tileColor: Colors.white,
+                  // tileColor: Colors.white,
                   title: const Text('Cash on Delivery'),
                   subtitle: const Text('Pay with cash on delivery'),
                   value: PaymentMethod.cashOnDelivery,
@@ -151,7 +153,7 @@ class _SelectPaymentState extends State<SelectPayment> {
                   height: 5.0,
                 ),
                 RadioListTile<PaymentMethod>(
-                  tileColor: Colors.white,
+                  // tileColor: Colors.white,
                   title: const Text('Card'),
                   subtitle: const Text('Pay with credit card'),
                   value: PaymentMethod.card,
@@ -171,252 +173,268 @@ class _SelectPaymentState extends State<SelectPayment> {
                   ),
                 ),
                 const SizedBox(height: 10),
-                LimitedBox(
-                  maxHeight: MediaQuery.of(context).size.height * 0.4,
-                  child: StreamBuilder<List<CartItem>>(
-                    stream: cart.getCartItems(firebaseUser!.uid),
-                    builder: (context, snapshot) {
-                      if (snapshot.hasData) {
-                        final cartItems = snapshot.data;
-                        if (cartItems!.isEmpty) {
-                          return Container(
-                            padding: const EdgeInsets.all(20),
-                            child: const Center(
-                              child: Text(
-                                'No Product in Cart',
-                                // style: TextStyle(
-                                //   fontSize: 20,
-                                // ),
-                              ),
+                StreamBuilder<List<CartItem>>(
+                  stream: cart.getCartItems(firebaseUser!.uid),
+                  builder: (context, snapshot) {
+                    if (snapshot.hasData) {
+                      final cartItems = snapshot.data;
+                      if (cartItems!.isEmpty) {
+                        return Container(
+                          padding: const EdgeInsets.all(20),
+                          child: const Center(
+                            child: Text(
+                              'No Product in Cart',
                             ),
-                          );
-                        }
-                        return Scrollbar(
-                          interactive: true,
-                          child: ListView.builder(
-                            // controller: ScrollController(),
-                            itemCount: cartItems.length,
-                            itemBuilder: (context, index) {
-                              final cartItem = cartItems[index];
-                              return Stack(
-                                children: [
-                                  Container(
-                                    margin: const EdgeInsets.only(
-                                        bottom: 10, right: 5, left: 5),
-                                    padding: const EdgeInsets.all(10),
-                                    decoration: BoxDecoration(
-                                      borderRadius: BorderRadius.circular(5),
-                                      color: Colors.white,
-                                      boxShadow: [
-                                        BoxShadow(
-                                          color: Colors.grey.withOpacity(0.2),
-                                          spreadRadius: 1,
-                                          blurRadius: 4,
-                                          offset: const Offset(1,
-                                              1), // changes position of shadow
-                                        ),
-                                      ],
-                                    ),
-                                    child: Row(
-                                      // crossAxisAlignment: CrossAxisAlignment.start,
-                                      children: [
-                                        Container(
-                                          height: 100,
-                                          width: 100,
-                                          decoration: BoxDecoration(
-                                            image: DecorationImage(
-                                              image: CachedNetworkImageProvider(
-                                                cartItem.image,
-                                              ),
-                                              fit: BoxFit.cover,
-                                            ),
-                                            borderRadius:
-                                                BorderRadius.circular(2),
-                                            // color: Colors.amber,
+                          ),
+                        );
+                      }
+                      return ListView.builder(
+                        shrinkWrap: true,
+                        physics: const NeverScrollableScrollPhysics(),
+                        itemCount: cartItems.length,
+                        itemBuilder: (context, index) {
+                          final cartItem = cartItems[index];
+                          _supplierId = cartItem.supplierId;
+                          return Stack(
+                            children: [
+                              Container(
+                                margin: const EdgeInsets.only(
+                                  bottom: 10,
+                                ),
+                                padding: const EdgeInsets.all(10),
+                                decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(10),
+                                  color: Colors.white,
+                                ),
+                                child: Row(
+                                  children: [
+                                    Container(
+                                      height: 100,
+                                      width: 100,
+                                      decoration: BoxDecoration(
+                                        image: DecorationImage(
+                                          image: CachedNetworkImageProvider(
+                                            cartItem.image,
                                           ),
+                                          fit: BoxFit.cover,
                                         ),
-                                        const SizedBox(width: 10),
-                                        Expanded(
-                                          child: Column(
-                                            crossAxisAlignment:
-                                                CrossAxisAlignment.start,
+                                        borderRadius: BorderRadius.circular(2),
+                                        // color: Colors.amber,
+                                      ),
+                                    ),
+                                    const SizedBox(width: 10),
+                                    Expanded(
+                                      child: Column(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: [
+                                          Text(
+                                            cartItem.name,
+                                            maxLines: 2,
+                                            style: const TextStyle(
+                                              fontSize: 16,
+                                              fontWeight: FontWeight.w500,
+                                            ),
+                                          ),
+                                          const SizedBox(height: 14),
+                                          Row(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.spaceBetween,
                                             children: [
                                               Text(
-                                                cartItem.name,
-                                                maxLines: 2,
+                                                'Rs ${cartItem.price.round()}',
                                                 style: const TextStyle(
                                                   fontSize: 16,
                                                   fontWeight: FontWeight.w500,
                                                 ),
                                               ),
-                                              const SizedBox(height: 14),
+                                              const SizedBox(width: 5),
                                               Row(
-                                                mainAxisAlignment:
-                                                    MainAxisAlignment
-                                                        .spaceBetween,
                                                 children: [
+                                                  InkWell(
+                                                    onTap: cartItem.quantity > 1
+                                                        ? () {
+                                                            try {
+                                                              // set state to show loading
+                                                              setState(() {
+                                                                isLoading =
+                                                                    true;
+                                                              });
+                                                              cart
+                                                                  .removeFromCart(
+                                                                      cartItem
+                                                                          .productId)
+                                                                  .then(
+                                                                      (value) {
+                                                                // set state to hide loading
+                                                                setState(() {
+                                                                  isLoading =
+                                                                      false;
+                                                                });
+                                                              });
+                                                            } catch (e) {
+                                                              setState(() {
+                                                                isLoading =
+                                                                    false;
+                                                              });
+                                                            }
+                                                          }
+                                                        : null,
+                                                    child: Container(
+                                                      width: 30,
+                                                      height: 30,
+                                                      decoration: BoxDecoration(
+                                                        borderRadius:
+                                                            BorderRadius
+                                                                .circular(5),
+                                                        color: Colors.grey
+                                                            .withOpacity(0.2),
+                                                      ),
+                                                      child: Center(
+                                                        child: Icon(
+                                                          Icons.remove,
+                                                          size: 20,
+                                                          color:
+                                                              cartItem.quantity >
+                                                                      1
+                                                                  ? Colors.black
+                                                                  : Colors.grey,
+                                                        ),
+                                                      ),
+                                                    ),
+                                                  ),
+                                                  const SizedBox(width: 10),
                                                   Text(
-                                                    'Rs ${cartItem.price.round()}',
+                                                    '${cartItem.quantity}',
                                                     style: const TextStyle(
                                                       fontSize: 16,
                                                       fontWeight:
                                                           FontWeight.w500,
                                                     ),
                                                   ),
-                                                  const SizedBox(width: 5),
-                                                  Row(
-                                                    children: [
-                                                      InkWell(
-                                                        onTap: cartItem
-                                                                    .quantity >
-                                                                1
-                                                            ? () {
-                                                                try {
-                                                                  // set state to show loading
-                                                                  setState(() {
-                                                                    isLoading =
-                                                                        true;
-                                                                  });
-                                                                  cart
-                                                                      .removeFromCart(
-                                                                          cartItem
-                                                                              .productId)
-                                                                      .then(
-                                                                          (value) {
-                                                                    // set state to hide loading
-                                                                    setState(
-                                                                        () {
-                                                                      isLoading =
-                                                                          false;
-                                                                    });
-                                                                  });
-                                                                } catch (e) {
-                                                                  setState(() {
-                                                                    isLoading =
-                                                                        false;
-                                                                  });
-                                                                }
-                                                              }
-                                                            : null,
-                                                        child: Container(
-                                                          width: 30,
-                                                          height: 30,
-                                                          decoration:
-                                                              BoxDecoration(
-                                                            borderRadius:
-                                                                BorderRadius
-                                                                    .circular(
-                                                                        5),
-                                                            color: Colors.grey
-                                                                .withOpacity(
-                                                                    0.2),
-                                                          ),
-                                                          child: Center(
-                                                            child: Icon(
-                                                              Icons.remove,
-                                                              size: 20,
-                                                              color: cartItem
-                                                                          .quantity >
-                                                                      1
-                                                                  ? Colors.black
-                                                                  : Colors.grey,
-                                                            ),
-                                                          ),
+                                                  const SizedBox(width: 10),
+                                                  InkWell(
+                                                    onTap: () {
+                                                      try {
+                                                        // set state to show loading
+                                                        setState(() {
+                                                          isLoading = true;
+                                                        });
+                                                        cart
+                                                            .increaseQuantity(
+                                                                cartItem
+                                                                    .productId)
+                                                            .then((value) {
+                                                          // set state to hide loading
+                                                          setState(() {
+                                                            isLoading = false;
+                                                          });
+                                                        });
+                                                      } catch (e) {
+                                                        setState(() {
+                                                          isLoading = false;
+                                                        });
+                                                      }
+                                                    },
+                                                    child: Container(
+                                                      width: 30,
+                                                      height: 30,
+                                                      decoration: BoxDecoration(
+                                                        borderRadius:
+                                                            BorderRadius
+                                                                .circular(5),
+                                                        color: Colors.grey
+                                                            .withOpacity(0.2),
+                                                      ),
+                                                      child: const Center(
+                                                        child: Icon(
+                                                          Icons.add,
+                                                          size: 20,
                                                         ),
                                                       ),
-                                                      const SizedBox(width: 10),
-                                                      Text(
-                                                        '${cartItem.quantity}',
-                                                        style: const TextStyle(
-                                                          fontSize: 16,
-                                                          fontWeight:
-                                                              FontWeight.w500,
-                                                        ),
-                                                      ),
-                                                      const SizedBox(width: 10),
-                                                      InkWell(
-                                                        onTap: () {
-                                                          try {
-                                                            // set state to show loading
-                                                            setState(() {
-                                                              isLoading = true;
-                                                            });
-                                                            cart
-                                                                .increaseQuantity(
-                                                                    cartItem
-                                                                        .productId)
-                                                                .then((value) {
-                                                              // set state to hide loading
-                                                              setState(() {
-                                                                isLoading =
-                                                                    false;
-                                                              });
-                                                            });
-                                                          } catch (e) {
-                                                            setState(() {
-                                                              isLoading = false;
-                                                            });
-                                                          }
-                                                        },
-                                                        child: Container(
-                                                          width: 30,
-                                                          height: 30,
-                                                          decoration:
-                                                              BoxDecoration(
-                                                            borderRadius:
-                                                                BorderRadius
-                                                                    .circular(
-                                                                        5),
-                                                            color: Colors.grey
-                                                                .withOpacity(
-                                                                    0.2),
-                                                          ),
-                                                          child: const Center(
-                                                            child: Icon(
-                                                              Icons.add,
-                                                              size: 20,
-                                                            ),
-                                                          ),
-                                                        ),
-                                                      ),
-                                                    ],
+                                                    ),
                                                   ),
                                                 ],
                                               ),
                                             ],
                                           ),
-                                        )
-                                      ],
-                                    ),
-                                  ),
-                                  Positioned(
-                                    top: 15,
-                                    right: 10,
-                                    child: GestureDetector(
-                                      onTap: () {
-                                        cart.deleteFromCart(cartItem.productId);
-                                      },
-                                      child: Icon(
-                                        Icons.close,
-                                        color: Theme.of(context).primaryColor,
-                                        size: 20,
+                                        ],
                                       ),
-                                    ),
-                                  )
-                                ],
-                              );
-                            },
-                          ),
-                        );
-                      }
-                      if (snapshot.hasError) {
-                        return Text('Error: ${snapshot.error}');
-                      }
-                      return const Center(
-                        child: CircularProgressIndicator(),
+                                    )
+                                  ],
+                                ),
+                              ),
+                              Positioned(
+                                top: 15,
+                                right: 10,
+                                child: GestureDetector(
+                                  onTap: () {
+                                    cart.deleteFromCart(cartItem.productId);
+                                  },
+                                  child: Icon(
+                                    Icons.close,
+                                    color: Theme.of(context).primaryColor,
+                                    size: 20,
+                                  ),
+                                ),
+                              )
+                            ],
+                          );
+                        },
                       );
-                    },
-                  ),
+                    }
+                    if (snapshot.hasError) {
+                      return Text('Error: ${snapshot.error}');
+                    }
+                    return const Center(
+                      child: CircularProgressIndicator(),
+                    );
+                  },
+                ),
+                StreamBuilder(
+                  stream: cart.getTotalPrice(firebaseUser.uid),
+                  builder: (context, snapshot) {
+                    if (snapshot.hasData) {
+                      return Container(
+                        height: 50,
+                        width: double.infinity,
+                        decoration: BoxDecoration(
+                            color: Colors.white,
+                            borderRadius: BorderRadius.circular(10)),
+                        child: Padding(
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: 20,
+                            vertical: 10,
+                          ),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              const Text(
+                                'Total',
+                                style: TextStyle(
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.w500,
+                                ),
+                              ),
+                              Text(
+                                'Rs ${snapshot.data}',
+                                style: const TextStyle(
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.w500,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      );
+                    }
+                    if (snapshot.hasError) {
+                      return Text('Error: ${snapshot.error}');
+                    }
+                    return const Center(
+                      child: CircularProgressIndicator(),
+                    );
+                  },
                 ),
               ],
             ),
@@ -439,7 +457,7 @@ class _SelectPaymentState extends State<SelectPayment> {
                     ),
                     itemBuilder: (context, index) {
                       return RadioListTile<int>(
-                        tileColor: Colors.white,
+                        // tileColor: Colors.white,
                         // selected: _selectedAddress == address[index].id,
                         value: index,
                         groupValue: radioValue,

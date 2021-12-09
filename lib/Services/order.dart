@@ -9,13 +9,14 @@ class Order with ChangeNotifier {
 
   Future<void> addOrder(
     String userId,
-    List<String> cartItems,
+    String cartItems,
     String customerName,
     String address,
     String city,
     String state,
     String zip,
     String phone,
+    String suplierId,
   ) async {
     List<Map<String, dynamic>> orderItems = [];
     // create order collection
@@ -39,6 +40,7 @@ class Order with ChangeNotifier {
         'state': state,
         'zip': zip,
         'phone': phone,
+        'supplierId': suplierId,
       }).then((value) => log("Order Place Successfully"));
     } on FirebaseException catch (e) {
       log(e.message.toString());

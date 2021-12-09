@@ -6,6 +6,7 @@ class CartItem {
   final int quantity;
   final double price;
   final String image;
+  final String supplierId;
 
   CartItem({
     required this.productId,
@@ -13,5 +14,6 @@ class CartItem {
     required this.quantity,
     required this.price,
     required this.image,
+    required this.supplierId,
   });
 }
