@@ -8,6 +8,19 @@ class Cart with ChangeNotifier {
   // list of cart items doc id
   List<String> _cartIds = [];
 
+  String cartItemId = '';
+  bool getCartItemId(String proId) {
+    if (cartItemId == proId) {
+      return true;
+    } else {
+      return false;
+    }
+  }
+
+  bool isToCart = false;
+
+  bool get getIsToCart => isToCart;
+
   // get list of doc id of cart items
   List<String> get cartIds {
     return [..._cartIds];
@@ -34,7 +47,10 @@ class Cart with ChangeNotifier {
         .where('userId', isEqualTo: userId)
         .get();
     if (querySnapshot.docs.isEmpty) {
-      await FirebaseFirestore.instance.collection('cart').doc("cartId").set({
+      // isToCart = true;
+      cartItemId = productId;
+      notifyListeners();
+      await FirebaseFirestore.instance.collection('cart').doc().set({
         'userId': userId,
         'productId': productId,
         'name': name,
@@ -43,6 +59,8 @@ class Cart with ChangeNotifier {
         'quantity': 1,
         'supplierId': supplierId,
       });
+    } else {
+      return;
     }
     notifyListeners();
   }
@@ -115,6 +133,8 @@ class Cart with ChangeNotifier {
           'quantity': quantity - 1,
         }).then((value) => log('updated cart'));
       } else {
+        cartItemId = '';
+        notifyListeners();
         // remove product from cart
         await cartDocRef.delete().then((value) => log('removed from cart'));
       }
@@ -168,6 +188,8 @@ class Cart with ChangeNotifier {
     if (cartDocSnapshot.exists) {
       // product already exists in cart
       // remove product from cart
+      cartItemId = '';
+      notifyListeners();
       await cartDocRef.delete().then((value) => log('removed from cart'));
     }
   }
@@ -178,6 +200,8 @@ class Cart with ChangeNotifier {
     QuerySnapshot cartSnapshot =
         await cartRef.where('userId', isEqualTo: userId).get();
     if (cartSnapshot.docs.isNotEmpty) {
+      cartItemId = '';
+      notifyListeners();
       // ignore: avoid_function_literals_in_foreach_calls
       cartSnapshot.docs.forEach((doc) {
         doc.reference.delete();

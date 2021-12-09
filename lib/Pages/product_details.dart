@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:android_app_fnf/Models/product_argumets.dart';
 import 'package:android_app_fnf/Services/cart.dart';
 import 'package:android_app_fnf/Widgets/sign_in_sheet.dart';
@@ -118,13 +120,16 @@ class _ProductDetailsState extends State<ProductDetails> {
                     return SingleChildScrollView(
                       child: Column(
                         children: [
+                          addToCart.getCartItemId(product!.id)
+                              ? const Text("In cart")
+                              : const Text("Not in Cart"),
                           CarouselSlider(
                             options: CarouselOptions(
                               height: 400,
                               enableInfiniteScroll: false,
                               viewportFraction: 1,
                             ),
-                            items: product!['image'].map<Widget>((i) {
+                            items: product['image'].map<Widget>((i) {
                               return Builder(
                                 builder: (BuildContext context) {
                                   return SizedBox(
@@ -312,224 +317,133 @@ class _ProductDetailsState extends State<ProductDetails> {
       ),
       bottomNavigationBar: BottomAppBar(
         color: const Color(0xffF5F6F8),
-        child: firebaseUser != null
-            ? StreamBuilder<bool>(
-                // TODO :
-                stream: addToCart.checkIfProductExists(
-                    product.productId, firebaseUser.uid),
-                builder: (context, snapshot) {
-                  if (snapshot.hasData) {
-                    // log(product.productId);
-                    final isExist = snapshot.data;
-                    return isExist!
-                        ? Container(
-                            padding: const EdgeInsets.symmetric(
-                                horizontal: 10, vertical: 15),
-                            decoration: BoxDecoration(
-                              border: Border(
-                                top: BorderSide(
-                                  color: (Colors.grey[300])!,
-                                  width: 1,
+        child: Container(
+          padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 15),
+          decoration: BoxDecoration(
+            border: Border(
+              top: BorderSide(
+                color: (Colors.grey[300])!,
+                width: 1,
+              ),
+            ),
+          ),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceAround,
+            children: [
+              Directionality(
+                textDirection: TextDirection.rtl,
+                child: ElevatedButton.icon(
+                  style: ElevatedButton.styleFrom(
+                    primary: Colors.white,
+                    elevation: 0,
+                    padding:
+                        const EdgeInsetsDirectional.fromSTEB(30, 10, 30, 10),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(50),
+                    ),
+                  ),
+                  onPressed: () {
+                    Share.share("Product Name");
+                  },
+                  icon: Container(
+                    padding: const EdgeInsets.all(3),
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(50),
+                      color: Colors.grey[400],
+                    ),
+                    child: const Icon(
+                      Icons.arrow_upward,
+                      color: Colors.white,
+                    ),
+                  ),
+                  label: const Text(
+                    "SHARE THIS",
+                    style: TextStyle(
+                      color: Colors.black54,
+                    ),
+                  ),
+                ),
+              ),
+              Directionality(
+                textDirection: TextDirection.rtl,
+                child: ElevatedButton.icon(
+                  style: ElevatedButton.styleFrom(
+                    primary: Theme.of(context).primaryColor,
+                    elevation: 0,
+                    padding:
+                        const EdgeInsetsDirectional.fromSTEB(30, 10, 30, 10),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(50),
+                    ),
+                  ),
+                  icon: Container(
+                    padding: const EdgeInsets.all(3),
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(50),
+                      color: Colors.white,
+                    ),
+                    child: Icon(
+                      Icons.chevron_left,
+                      color: Theme.of(context).primaryColor,
+                    ),
+                  ),
+                  label: (!_loading)
+                      ? Text(addToCart.getCartItemId(product.productId)
+                          ? "CHECKOUT"
+                          : "ADD TO CART")
+                      : const Text(
+                          "...ADDING",
+                          style: TextStyle(
+                            color: Colors.black54,
+                          ),
+                        ),
+                  onPressed: (!_loading &&
+                          !addToCart.getCartItemId(product.productId))
+                      ? () {
+                          // ignore: unnecessary_null_comparison
+                          if (firebaseUser == null) {
+                            showModalBottomSheet(
+                              shape: const RoundedRectangleBorder(
+                                //the rounded corner is created here
+                                borderRadius: BorderRadius.only(
+                                  topLeft: Radius.circular(20),
+                                  topRight: Radius.circular(20),
                                 ),
                               ),
-                            ),
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceAround,
-                              children: [
-                                Directionality(
-                                  textDirection: TextDirection.rtl,
-                                  child: ElevatedButton.icon(
-                                    style: ElevatedButton.styleFrom(
-                                      primary: Colors.white,
-                                      elevation: 0,
-                                      padding:
-                                          const EdgeInsetsDirectional.fromSTEB(
-                                              30, 10, 30, 10),
-                                      shape: RoundedRectangleBorder(
-                                        borderRadius: BorderRadius.circular(50),
+                              context: context,
+                              builder: (context) {
+                                return const SignInSheet();
+                              },
+                            );
+                          } else {
+                            if (!addToCart.getCartItemId(product.productId)) {
+                              log("cart is not empty");
+                              showDialog(
+                                  context: context,
+                                  builder: (context) {
+                                    return AlertDialog(
+                                      content: const Text(
+                                        "Your cart already contains products. \n\nDo you want to discard them and add this to cart?",
                                       ),
-                                    ),
-                                    onPressed: () {
-                                      Share.share("Product Name");
-                                    },
-                                    icon: Container(
-                                      padding: const EdgeInsets.all(3),
-                                      decoration: BoxDecoration(
-                                        borderRadius: BorderRadius.circular(50),
-                                        color: Colors.grey[400],
-                                      ),
-                                      child: const Icon(
-                                        Icons.arrow_upward,
-                                        color: Colors.white,
-                                      ),
-                                    ),
-                                    label: const Text(
-                                      "SHARE THIS",
-                                      style: TextStyle(
-                                        color: Colors.black54,
-                                      ),
-                                    ),
-                                  ),
-                                ),
-                                Directionality(
-                                  textDirection: TextDirection.rtl,
-                                  child: ElevatedButton.icon(
-                                      style: ElevatedButton.styleFrom(
-                                        primary: Theme.of(context).primaryColor,
-                                        elevation: 0,
-                                        padding: const EdgeInsetsDirectional
-                                            .fromSTEB(30, 10, 30, 10),
-                                        shape: RoundedRectangleBorder(
-                                          borderRadius:
-                                              BorderRadius.circular(50),
-                                        ),
-                                      ),
-                                      icon: Container(
-                                        padding: const EdgeInsets.all(3),
-                                        decoration: BoxDecoration(
-                                          borderRadius:
-                                              BorderRadius.circular(50),
-                                          color: Colors.white,
-                                        ),
-                                        child: Icon(
-                                          Icons.chevron_left,
-                                          color: Theme.of(context).primaryColor,
-                                        ),
-                                      ),
-                                      label: const Text(
-                                        "CHEKOUT",
-                                        // style: TextStyle(
-                                        //   color: Colors.black54,
-                                        // ),
-                                      ),
-                                      onPressed: () {
-                                        // ignore: unnecessary_null_comparison
-                                        if (firebaseUser == null) {
-                                          showModalBottomSheet(
-                                            shape: const RoundedRectangleBorder(
-                                              //the rounded corner is created here
-                                              borderRadius: BorderRadius.only(
-                                                topLeft: Radius.circular(20),
-                                                topRight: Radius.circular(20),
-                                              ),
-                                            ),
-                                            context: context,
-                                            builder: (context) {
-                                              return const SignInSheet();
-                                            },
-                                          );
-                                        } else {
-                                          Navigator.pushNamed(
-                                              context, '/select-payment');
-                                        }
-                                      }),
-                                ),
-                              ],
-                            ),
-                          )
-                        : Container(
-                            padding: const EdgeInsets.symmetric(
-                                horizontal: 10, vertical: 15),
-                            decoration: BoxDecoration(
-                              border: Border(
-                                top: BorderSide(
-                                  color: (Colors.grey[300])!,
-                                  width: 1,
-                                ),
-                              ),
-                            ),
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceAround,
-                              children: [
-                                Directionality(
-                                  textDirection: TextDirection.rtl,
-                                  child: ElevatedButton.icon(
-                                    style: ElevatedButton.styleFrom(
-                                      primary: Colors.white,
-                                      elevation: 0,
-                                      padding:
-                                          const EdgeInsetsDirectional.fromSTEB(
-                                              30, 10, 30, 10),
-                                      shape: RoundedRectangleBorder(
-                                        borderRadius: BorderRadius.circular(50),
-                                      ),
-                                    ),
-                                    onPressed: () {
-                                      Share.share("Product Name");
-                                    },
-                                    icon: Container(
-                                      padding: const EdgeInsets.all(3),
-                                      decoration: BoxDecoration(
-                                        borderRadius: BorderRadius.circular(50),
-                                        color: Colors.grey[400],
-                                      ),
-                                      child: const Icon(
-                                        Icons.arrow_upward,
-                                        color: Colors.white,
-                                      ),
-                                    ),
-                                    label: const Text(
-                                      "SHARE THIS",
-                                      style: TextStyle(
-                                        color: Colors.black54,
-                                      ),
-                                    ),
-                                  ),
-                                ),
-                                Directionality(
-                                  textDirection: TextDirection.rtl,
-                                  child: ElevatedButton.icon(
-                                    style: ElevatedButton.styleFrom(
-                                      primary: Theme.of(context).primaryColor,
-                                      elevation: 0,
-                                      padding:
-                                          const EdgeInsetsDirectional.fromSTEB(
-                                              30, 10, 30, 10),
-                                      shape: RoundedRectangleBorder(
-                                        borderRadius: BorderRadius.circular(50),
-                                      ),
-                                    ),
-                                    icon: Container(
-                                      padding: const EdgeInsets.all(3),
-                                      decoration: BoxDecoration(
-                                        borderRadius: BorderRadius.circular(50),
-                                        color: Colors.white,
-                                      ),
-                                      child: Icon(
-                                        Icons.chevron_left,
-                                        color: Theme.of(context).primaryColor,
-                                      ),
-                                    ),
-                                    label: !_loading
-                                        ? const Text("ADD TO CART")
-                                        : const Text(
-                                            "...ADDING",
+                                      actions: [
+                                        TextButton(
+                                          onPressed: () {
+                                            Navigator.pop(context);
+                                          },
+                                          child: Text(
+                                            "CANCEL",
                                             style: TextStyle(
-                                              color: Colors.black54,
+                                              color: Theme.of(context)
+                                                  .primaryColor,
                                             ),
                                           ),
-                                    onPressed: !_loading
-                                        ? () {
-                                            // ignore: unnecessary_null_comparison
-                                            if (firebaseUser == null) {
-                                              showModalBottomSheet(
-                                                shape:
-                                                    const RoundedRectangleBorder(
-                                                  //the rounded corner is created here
-                                                  borderRadius:
-                                                      BorderRadius.only(
-                                                    topLeft:
-                                                        Radius.circular(20),
-                                                    topRight:
-                                                        Radius.circular(20),
-                                                  ),
-                                                ),
-                                                context: context,
-                                                builder: (context) {
-                                                  return const SignInSheet();
-                                                },
-                                              );
-                                            } else {
+                                        ),
+                                        TextButton(
+                                          onPressed: () {
+                                            Navigator.pop(context);
+                                            addToCart
+                                                .clearCart(firebaseUser.uid)!
+                                                .then((value) {
                                               try {
                                                 // set _loading to true
                                                 setState(() {
@@ -571,164 +485,67 @@ class _ProductDetailsState extends State<ProductDetails> {
                                                   ),
                                                 );
                                               }
-                                            }
-                                          }
-                                        : null,
-                                  ),
-                                ),
-                              ],
-                            ),
-                          );
-                  }
-                  if (snapshot.hasError) {
-                    return Text('Error: ${snapshot.error}');
-                  }
-                  return const Text("Add to cart");
-                },
-              )
-            : Container(
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 10, vertical: 15),
-                decoration: BoxDecoration(
-                  border: Border(
-                    top: BorderSide(
-                      color: (Colors.grey[300])!,
-                      width: 1,
-                    ),
-                  ),
-                ),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceAround,
-                  children: [
-                    Directionality(
-                      textDirection: TextDirection.rtl,
-                      child: ElevatedButton.icon(
-                        style: ElevatedButton.styleFrom(
-                          primary: Colors.white,
-                          elevation: 0,
-                          padding: const EdgeInsetsDirectional.fromSTEB(
-                              30, 10, 30, 10),
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(50),
-                          ),
-                        ),
-                        onPressed: () {
-                          Share.share("Product Name");
-                        },
-                        icon: Container(
-                          padding: const EdgeInsets.all(3),
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(50),
-                            color: Colors.grey[400],
-                          ),
-                          child: const Icon(
-                            Icons.arrow_upward,
-                            color: Colors.white,
-                          ),
-                        ),
-                        label: const Text(
-                          "SHARE THIS",
-                          style: TextStyle(
-                            color: Colors.black54,
-                          ),
-                        ),
-                      ),
-                    ),
-                    Directionality(
-                      textDirection: TextDirection.rtl,
-                      child: ElevatedButton.icon(
-                        style: ElevatedButton.styleFrom(
-                          primary: Theme.of(context).primaryColor,
-                          elevation: 0,
-                          padding: const EdgeInsetsDirectional.fromSTEB(
-                              30, 10, 30, 10),
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(50),
-                          ),
-                        ),
-                        icon: Container(
-                          padding: const EdgeInsets.all(3),
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(50),
-                            color: Colors.white,
-                          ),
-                          child: Icon(
-                            Icons.chevron_left,
-                            color: Theme.of(context).primaryColor,
-                          ),
-                        ),
-                        label: !_loading
-                            ? const Text("ADD TO CART")
-                            : const Text(
-                                "...ADDING",
-                                style: TextStyle(
-                                  color: Colors.black54,
-                                ),
-                              ),
-                        onPressed: !_loading
-                            ? () {
-                                // ignore: unnecessary_null_comparison
-                                if (firebaseUser == null) {
-                                  showModalBottomSheet(
-                                    shape: const RoundedRectangleBorder(
-                                      //the rounded corner is created here
-                                      borderRadius: BorderRadius.only(
-                                        topLeft: Radius.circular(20),
-                                        topRight: Radius.circular(20),
-                                      ),
-                                    ),
-                                    context: context,
-                                    builder: (context) {
-                                      return const SignInSheet();
-                                    },
-                                  );
-                                } else {
-                                  try {
-                                    // set _loading to true
-                                    setState(() {
-                                      _loading = true;
-                                    });
-                                    // add to cart
-                                    addToCart
-                                        .addToCart(
-                                      product.productId,
-                                      product.name,
-                                      product.price,
-                                      product.supplierId,
-                                      firebaseUser.uid,
-                                      product.imageUrl,
-                                    )
-                                        .then((value) {
-                                      // set _loading to false
-                                      setState(() {
-                                        _loading = false;
-                                      });
-                                      ScaffoldMessenger.of(context)
-                                          .showSnackBar(
-                                        const SnackBar(
-                                          behavior: SnackBarBehavior.floating,
-                                          content:
-                                              Text("Product added to cart"),
+                                            });
+                                          },
+                                          child: Text(
+                                            "YES",
+                                            style: TextStyle(
+                                              color: Theme.of(context)
+                                                  .primaryColor,
+                                            ),
+                                          ),
                                         ),
-                                      );
-                                    });
-                                  } catch (e) {
-                                    ScaffoldMessenger.of(context).showSnackBar(
-                                      const SnackBar(
-                                        behavior: SnackBarBehavior.floating,
-                                        content: Text(
-                                            "Something went wrong please try later."),
-                                      ),
+                                      ],
                                     );
-                                  }
-                                }
+                                  });
+                            } else {
+                              try {
+                                // set _loading to true
+                                setState(() {
+                                  _loading = true;
+                                });
+                                // add to cart
+                                addToCart
+                                    .addToCart(
+                                  product.productId,
+                                  product.name,
+                                  product.price,
+                                  product.supplierId,
+                                  firebaseUser.uid,
+                                  product.imageUrl,
+                                )
+                                    .then((value) {
+                                  // set _loading to false
+                                  setState(() {
+                                    _loading = false;
+                                  });
+                                  ScaffoldMessenger.of(context).showSnackBar(
+                                    const SnackBar(
+                                      behavior: SnackBarBehavior.floating,
+                                      content: Text("Product added to cart"),
+                                    ),
+                                  );
+                                });
+                              } catch (e) {
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                  const SnackBar(
+                                    behavior: SnackBarBehavior.floating,
+                                    content: Text(
+                                        "Something went wrong please try later."),
+                                  ),
+                                );
                               }
-                            : null,
-                      ),
-                    ),
-                  ],
+                            }
+                          }
+                        }
+                      : () {
+                          Navigator.pushNamed(context, '/select-payment');
+                        },
                 ),
               ),
+            ],
+          ),
+        ),
       ),
     );
   }
