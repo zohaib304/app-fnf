@@ -120,16 +120,13 @@ class _ProductDetailsState extends State<ProductDetails> {
                     return SingleChildScrollView(
                       child: Column(
                         children: [
-                          addToCart.getCartItemId(product!.id)
-                              ? const Text("In cart")
-                              : const Text("Not in Cart"),
                           CarouselSlider(
                             options: CarouselOptions(
                               height: 400,
                               enableInfiniteScroll: false,
                               viewportFraction: 1,
                             ),
-                            items: product['image'].map<Widget>((i) {
+                            items: product!['image'].map<Widget>((i) {
                               return Builder(
                                 builder: (BuildContext context) {
                                   return SizedBox(
@@ -343,7 +340,7 @@ class _ProductDetailsState extends State<ProductDetails> {
                     ),
                   ),
                   onPressed: () {
-                    Share.share("Product Name");
+                    Share.share(product.name);
                   },
                   icon: Container(
                     padding: const EdgeInsets.all(3),
