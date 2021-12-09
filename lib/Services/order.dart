@@ -1,6 +1,5 @@
 import 'dart:developer';
 
-import 'package:android_app_fnf/Models/cart_items.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 
@@ -18,7 +17,6 @@ class Order with ChangeNotifier {
     String phone,
     String suplierId,
   ) async {
-    List<Map<String, dynamic>> orderItems = [];
     // create order collection
     final CollectionReference orderCollection =
         FirebaseFirestore.instance.collection('orders');
