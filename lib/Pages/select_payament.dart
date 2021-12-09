@@ -78,19 +78,18 @@ class _SelectPaymentState extends State<SelectPayment> {
             _index = index;
           });
         },
-        controlsBuilder: (BuildContext context,
-            {VoidCallback? onStepContinue, VoidCallback? onStepCancel}) {
+        controlsBuilder: (BuildContext context, ControlsDetails details) {
           return Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: <Widget>[
               if (_index > 0)
                 TextButton(
-                  onPressed: onStepCancel,
+                  onPressed: details.onStepCancel,
                   child: const Text('Back'),
                 ),
               if (_index < 2)
                 ElevatedButton(
-                  onPressed: onStepContinue,
+                  onPressed: details.onStepContinue,
                   child: const Text('Next'),
                 ),
               if (_index == 2)
