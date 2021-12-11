@@ -112,8 +112,8 @@ class _ParentState extends State<Parent> {
             label: 'Home',
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.category_outlined),
-            activeIcon: Icon(Icons.category_rounded),
+            icon: Icon(Icons.grid_view_outlined),
+            activeIcon: Icon(Icons.grid_view_rounded),
             label: 'Categories',
           ),
           BottomNavigationBarItem(
