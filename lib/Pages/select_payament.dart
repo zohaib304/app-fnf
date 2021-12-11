@@ -1,6 +1,7 @@
 import 'dart:developer';
 import 'package:android_app_fnf/Models/address.dart';
 import 'package:android_app_fnf/Models/cart_items.dart';
+import 'package:android_app_fnf/Models/order_arguments.dart';
 import 'package:android_app_fnf/Services/add_new_address.dart';
 import 'package:android_app_fnf/Services/cart.dart';
 import 'package:android_app_fnf/Services/order.dart';
@@ -33,13 +34,14 @@ class _SelectPaymentState extends State<SelectPayment> {
   String _city = '';
   String _state = '';
   String _zip = '';
-  String _supplierId = '';
   bool _placeOrder = false;
   bool isLoading = false;
 
   PaymentMethod? _paymentMethod = PaymentMethod.cashOnDelivery;
   @override
   Widget build(BuildContext context) {
+    final orderProduct =
+        ModalRoute.of(context)!.settings.arguments as OrderArguments;
     final addressList = Provider.of<AddNewAddress>(context);
     final firebaseUser = context.watch<User?>();
     final cart = Provider.of<Cart>(context);
@@ -103,14 +105,17 @@ class _SelectPaymentState extends State<SelectPayment> {
                       cart.getDocIds(firebaseUser!.uid).then((_) {
                         placeOrder.addOrder(
                           firebaseUser.uid,
-                          cart.cartItemId,
+                          orderProduct.productId,
+                          orderProduct.name,
+                          orderProduct.price.toString(),
+                          orderProduct.supplierId,
+                          orderProduct.imageUrl,
                           _customerName,
                           _address,
                           _city,
                           _state,
                           _zip,
                           _phone,
-                          _supplierId,
                         );
                       }).then((value) {
                         cart.clearCart(firebaseUser.uid);
@@ -194,7 +199,6 @@ class _SelectPaymentState extends State<SelectPayment> {
                         itemCount: cartItems.length,
                         itemBuilder: (context, index) {
                           final cartItem = cartItems[index];
-                          _supplierId = cartItem.supplierId;
                           return Stack(
                             children: [
                               Container(

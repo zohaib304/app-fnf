@@ -184,7 +184,7 @@ class Home extends StatelessWidget {
                           double.parse(data["price"]),
                           data["supplier_id"],
                           data['image'][0],
-                        ));
+                        ),);
                   },
                   child: Container(
                     margin: const EdgeInsets.all(2),
