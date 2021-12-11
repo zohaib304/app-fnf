@@ -1,9 +1,13 @@
+import 'package:android_app_fnf/Pages/categories.dart';
+import 'package:android_app_fnf/Pages/help.dart';
+import 'package:android_app_fnf/Pages/manage_account.dart';
 import 'package:android_app_fnf/Pages/new_address.dart';
 import 'package:android_app_fnf/Pages/order_confirmed.dart';
 import 'package:android_app_fnf/Pages/product_details.dart';
 import 'package:android_app_fnf/Pages/profile.dart';
 import 'package:android_app_fnf/Pages/select_payament.dart';
 import 'package:android_app_fnf/Pages/view_cart.dart';
+import 'package:android_app_fnf/Pages/view_orders.dart';
 import 'package:android_app_fnf/Services/add_new_address.dart';
 import 'package:android_app_fnf/Services/auth.dart';
 import 'package:android_app_fnf/Services/cart.dart';
@@ -17,7 +21,7 @@ import 'package:provider/provider.dart';
 // local imports
 import 'Pages/home.dart';
 
-void main() async{
+void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
   runApp(const MyApp());
@@ -54,7 +58,7 @@ class MyApp extends StatelessWidget {
         theme: ThemeData(
           primaryColor: const Color(0xffFF3E44),
         ),
-        home: const Home(),
+        home: const Parent(),
         routes: {
           ProductDetails.routeName: (context) => const ProductDetails(),
           Profile.routeName: (context) => const Profile(),
@@ -63,6 +67,71 @@ class MyApp extends StatelessWidget {
           NewAddress.routeName: (context) => NewAddress(),
           OrderConfirmed.routeName: (context) => const OrderConfirmed(),
         },
+      ),
+    );
+  }
+}
+
+class Parent extends StatefulWidget {
+  const Parent({Key? key}) : super(key: key);
+
+  @override
+  _ParentState createState() => _ParentState();
+}
+
+class _ParentState extends State<Parent> {
+  int _currentIndex = 0;
+  final List<Widget> _children = [
+    const Home(),
+    const Categories(),
+    const ViewOrders(),
+    const Help(),
+    const ManageAccount(),
+  ];
+
+  void onTapped(int index) {
+    setState(() {
+      _currentIndex = index;
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      body: _children[_currentIndex], // new
+      bottomNavigationBar: BottomNavigationBar(
+        currentIndex: _currentIndex,
+        onTap: onTapped,
+        selectedItemColor: Theme.of(context).primaryColor,
+        selectedFontSize: 12,
+        type: BottomNavigationBarType.fixed,
+        items: const [
+          BottomNavigationBarItem(
+            icon: Icon(Icons.home_outlined),
+            activeIcon: Icon(Icons.home_rounded),
+            label: 'Home',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.category_outlined),
+            activeIcon: Icon(Icons.category_rounded),
+            label: 'Categories',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.shopping_bag_outlined),
+            activeIcon: Icon(Icons.shopping_bag_rounded),
+            label: 'Orders',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.help_outline_rounded),
+            activeIcon: Icon(Icons.help_rounded),
+            label: 'Help',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.person_outline_outlined),
+            activeIcon: Icon(Icons.person_rounded),
+            label: 'Account',
+          )
+        ],
       ),
     );
   }
