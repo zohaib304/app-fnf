@@ -15,11 +15,11 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:provider/provider.dart';
 
 // local imports
-import "./Pages/error.dart";
 import 'Pages/home.dart';
 
-void main() {
+void main() async{
   WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp();
   runApp(const MyApp());
 }
 
@@ -54,7 +54,7 @@ class MyApp extends StatelessWidget {
         theme: ThemeData(
           primaryColor: const Color(0xffFF3E44),
         ),
-        home: MyHomePage(),
+        home: const Home(),
         routes: {
           ProductDetails.routeName: (context) => const ProductDetails(),
           Profile.routeName: (context) => const Profile(),
@@ -64,32 +64,6 @@ class MyApp extends StatelessWidget {
           OrderConfirmed.routeName: (context) => const OrderConfirmed(),
         },
       ),
-    );
-  }
-}
-
-class MyHomePage extends StatelessWidget {
-  MyHomePage({Key? key}) : super(key: key);
-
-  final Future<FirebaseApp> _initialization = Firebase.initializeApp();
-
-  @override
-  Widget build(BuildContext context) {
-    return FutureBuilder(
-      future: _initialization,
-      builder: (BuildContext context, AsyncSnapshot<FirebaseApp> snapshot) {
-        if (snapshot.hasError) {
-          return const Error();
-        }
-        if (snapshot.connectionState == ConnectionState.done) {
-          return const Home();
-        }
-        return const Scaffold(
-          body: Center(
-            child: CircularProgressIndicator(),
-          ),
-        );
-      },
     );
   }
 }
