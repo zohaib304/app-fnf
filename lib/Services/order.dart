@@ -31,7 +31,7 @@ class Order with ChangeNotifier {
         'userId': userId,
         'cartItems': cartItems,
         'status': 'pending',
-        'timestramp': DateTime.now().toIso8601String(),
+        'timestamp': FieldValue.serverTimestamp(),
         'customerName': customerName,
         'address': address,
         'city': city,
