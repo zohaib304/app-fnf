@@ -1,6 +1,4 @@
 import 'dart:developer';
-
-import 'package:android_app_fnf/Models/order_arguments.dart';
 import 'package:android_app_fnf/Models/product_argumets.dart';
 import 'package:android_app_fnf/Services/cart.dart';
 import 'package:android_app_fnf/Widgets/sign_in_sheet.dart';
@@ -72,13 +70,6 @@ class _ProductDetailsState extends State<ProductDetails> {
                       Navigator.pushNamed(
                         context,
                         '/select-payment',
-                        arguments: OrderArguments(
-                          product.productId,
-                          product.name,
-                          product.price,
-                          product.supplierId,
-                          product.imageUrl[0],
-                        ),
                       );
                     }
                   },
@@ -551,13 +542,6 @@ class _ProductDetailsState extends State<ProductDetails> {
                           Navigator.pushNamed(
                             context,
                             '/select-payment',
-                            arguments: OrderArguments(
-                              product.productId,
-                              product.name,
-                              product.price,
-                              product.supplierId,
-                              product.imageUrl[0],
-                            ),
                           );
                         },
                 ),

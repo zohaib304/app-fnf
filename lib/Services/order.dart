@@ -2,48 +2,46 @@ import 'dart:developer';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
-import 'package:uuid/uuid.dart';
+import 'package:flutter/material.dart';
 
 class Order with ChangeNotifier {
   // write a function take userId, supplierId and list as argument and add the order to the firebase collection
 
   Future<void> addOrder(
-    String userId,
-    String productId,
-    String productName,
-    String productPrice,
-    String supplierId,
-    String imageUrl,
     String customerName,
     String address,
     String city,
     String state,
     String zip,
     String phone,
+    String cartId,
+    String paymentMethod,
   ) async {
-    // create order collection
-    final CollectionReference orderCollection =
-        FirebaseFirestore.instance.collection('orders');
-
-    try {
-      orderCollection.add({
-        'userId': userId,
-        'productId': productId,
-        'productName': productName,
-        'productPrice': productPrice,
-        'supplierId': supplierId,
-        'imageUrl': imageUrl,
-        'status': 'pending',
+    // log(cartId);
+    await FirebaseFirestore.instance
+        .collection('cart')
+        .doc(cartId)
+        .get()
+        .then((value) {
+      // log(value.data()!['price'].toString());
+      FirebaseFirestore.instance.collection('orders').doc().set({
+        'cartId': value.id,
         'customerName': customerName,
         'address': address,
         'city': city,
         'state': state,
         'zip': zip,
         'phone': phone,
-        'timestamp': FieldValue.serverTimestamp(),
-      }).then((value) => log("Order Place Successfully"));
-    } on FirebaseException catch (e) {
-      log(e.message.toString());
-    }
+        'status': 'pending',
+        'paymentMethod': paymentMethod,
+        'productPrice': value.data()!['price'] * value.data()!['quantity'],
+        'productName': value.data()!['name'],
+        'quantity': value.data()!['quantity'],
+        'supplierId': value.data()!['supplierId'],
+        'image': value.data()!['image'],
+      }).then((value) {
+        log("order added");
+      });
+    });
   }
 }

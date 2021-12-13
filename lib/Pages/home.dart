@@ -160,9 +160,11 @@ class Home extends StatelessWidget {
               initialLoader: SizedBox(
                 width: 20,
                 height: 20,
-                child: CircularProgressIndicator(
-                  strokeWidth: 2,
-                  color: Theme.of(context).primaryColor,
+                child: Center(
+                  child: CircularProgressIndicator(
+                    strokeWidth: 2,
+                    color: Theme.of(context).primaryColor,
+                  ),
                 ),
               ),
               itemBuilderType:
@@ -177,14 +179,17 @@ class Home extends StatelessWidget {
                 final data = documentSnapshots[index].data() as Map?;
                 return GestureDetector(
                   onTap: () {
-                    Navigator.pushNamed(context, '/product-detail',
-                        arguments: ProductArguments(
-                          documentSnapshots[index].id,
-                          data!["productName"],
-                          double.parse(data["price"]),
-                          data["supplier_id"],
-                          data['image'][0],
-                        ),);
+                    Navigator.pushNamed(
+                      context,
+                      '/product-detail',
+                      arguments: ProductArguments(
+                        documentSnapshots[index].id,
+                        data!["productName"],
+                        double.parse(data["price"]),
+                        data["supplier_id"],
+                        data['image'][0],
+                      ),
+                    );
                   },
                   child: Container(
                     margin: const EdgeInsets.all(2),

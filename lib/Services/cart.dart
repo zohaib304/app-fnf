@@ -30,10 +30,8 @@ class Cart with ChangeNotifier {
   Future<void> getDocIds(String userId) async {
     log('getDocIds');
     // final userId = await getUserId();
-    final querySnapshot = await FirebaseFirestore.instance
-        .collection('cart')
-        .where('userId', isEqualTo: userId)
-        .get();
+    final querySnapshot =
+        await FirebaseFirestore.instance.collection('cart').get();
     _cartIds = querySnapshot.docs.map<String>((doc) => doc.id).toList();
     notifyListeners();
   }
@@ -129,9 +127,11 @@ class Cart with ChangeNotifier {
       // product already exists in cart
       // update quantity
       int quantity = (cartDocSnapshot.data() as dynamic)['quantity'];
+      // int price = (cartDocSnapshot.data() as dynamic)['price'];
       if (quantity > 1) {
         await cartDocRef.update({
           'quantity': quantity - 1,
+          // 'price': price - price,
         }).then((value) => log('updated cart'));
       } else {
         cartItemId = '';
@@ -175,6 +175,7 @@ class Cart with ChangeNotifier {
       int quantity = (cartDocSnapshot.data() as dynamic)['quantity'];
       await cartDocRef.update({
         'quantity': quantity + 1,
+        // 'price': (cartDocSnapshot.data() as dynamic)['price'] * (quantity + 1),
       }).then((value) => log('updated cart'));
     }
   }

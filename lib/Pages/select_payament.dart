@@ -1,7 +1,6 @@
 import 'dart:developer';
 import 'package:android_app_fnf/Models/address.dart';
 import 'package:android_app_fnf/Models/cart_items.dart';
-import 'package:android_app_fnf/Models/order_arguments.dart';
 import 'package:android_app_fnf/Services/add_new_address.dart';
 import 'package:android_app_fnf/Services/cart.dart';
 import 'package:android_app_fnf/Services/order.dart';
@@ -36,12 +35,11 @@ class _SelectPaymentState extends State<SelectPayment> {
   String _zip = '';
   bool _placeOrder = false;
   bool isLoading = false;
+  String paymentMethod = '';
 
   PaymentMethod? _paymentMethod = PaymentMethod.cashOnDelivery;
   @override
   Widget build(BuildContext context) {
-    final orderProduct =
-        ModalRoute.of(context)!.settings.arguments as OrderArguments;
     final addressList = Provider.of<AddNewAddress>(context);
     final firebaseUser = context.watch<User?>();
     final cart = Provider.of<Cart>(context);
@@ -76,11 +74,6 @@ class _SelectPaymentState extends State<SelectPayment> {
             });
           }
         },
-        onStepTapped: (int index) {
-          setState(() {
-            _index = index;
-          });
-        },
         controlsBuilder: (BuildContext context, ControlsDetails details) {
           return Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -104,22 +97,26 @@ class _SelectPaymentState extends State<SelectPayment> {
                       });
                       cart.getDocIds(firebaseUser!.uid).then((_) {
                         placeOrder.addOrder(
-                          firebaseUser.uid,
-                          orderProduct.productId,
-                          orderProduct.name,
-                          orderProduct.price.toString(),
-                          orderProduct.supplierId,
-                          orderProduct.imageUrl,
                           _customerName,
                           _address,
                           _city,
                           _state,
                           _zip,
                           _phone,
+                          cart.cartIds[0],
+                          paymentMethod,
                         );
                       }).then((value) {
                         cart.clearCart(firebaseUser.uid);
                         Navigator.pushNamed(context, '/order-confirmed');
+                        ScaffoldMessenger.of(context)
+                            .showSnackBar(const SnackBar(
+                          content: Text('Order Placed'),
+                          duration: Duration(seconds: 2),
+                        ));
+                        setState(() {
+                          _placeOrder = false;
+                        });
                       });
                     } catch (e) {
                       setState(() {
@@ -151,6 +148,7 @@ class _SelectPaymentState extends State<SelectPayment> {
                   onChanged: (PaymentMethod? value) {
                     setState(() {
                       _paymentMethod = value;
+                      paymentMethod = "Cash on Delivery";
                     });
                   },
                 ),
@@ -166,6 +164,7 @@ class _SelectPaymentState extends State<SelectPayment> {
                   onChanged: (PaymentMethod? value) {
                     setState(() {
                       _paymentMethod = value;
+                      paymentMethod = "Card";
                     });
                   },
                 ),
