@@ -109,11 +109,6 @@ class _SelectPaymentState extends State<SelectPayment> {
                       }).then((value) {
                         cart.clearCart(firebaseUser.uid);
                         Navigator.pushNamed(context, '/order-confirmed');
-                        ScaffoldMessenger.of(context)
-                            .showSnackBar(const SnackBar(
-                          content: Text('Order Placed'),
-                          duration: Duration(seconds: 2),
-                        ));
                         setState(() {
                           _placeOrder = false;
                         });
