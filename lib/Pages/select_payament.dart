@@ -391,7 +391,7 @@ class _SelectPaymentState extends State<SelectPayment> {
                 ),
                 StreamBuilder(
                   stream: cart.getTotalPrice(firebaseUser.uid),
-                  builder: (context, snapshot) {
+                  builder: (context, AsyncSnapshot<double?> snapshot) {
                     if (snapshot.hasData) {
                       return Container(
                         height: 50,
