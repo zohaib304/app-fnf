@@ -107,7 +107,6 @@ class _SelectPaymentState extends State<SelectPayment> {
                           paymentMethod,
                         );
                       }).then((value) {
-                        cart.clearCart(firebaseUser.uid);
                         Navigator.pushNamed(context, '/order-confirmed');
                         setState(() {
                           _placeOrder = false;
