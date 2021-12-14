@@ -66,6 +66,7 @@ class MyApp extends StatelessWidget {
           SelectPayment.routeName: (context) => const SelectPayment(),
           NewAddress.routeName: (context) => NewAddress(),
           OrderConfirmed.routeName: (context) => const OrderConfirmed(),
+          Help.routeName: (context) => const Help(),
         },
       ),
     );
