@@ -112,31 +112,6 @@ class _ProductDetailsState extends State<ProductDetails> {
         child: Column(
           children: [
             StreamBuilder(
-              initialData: "",
-              stream: addToCart.checkIfProductExists(
-                  product.productId, firebaseUser!.uid),
-              builder: (context, snapshot) {
-                if (snapshot.hasData) {
-                  return Container(
-                    padding: const EdgeInsets.all(10),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Text(
-                          '${snapshot.data.toString()}',
-                          style: const TextStyle(
-                            fontSize: 20,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                      ],
-                    ),
-                  );
-                }
-                return Container();
-              },
-            ),
-            StreamBuilder(
                 stream: FirebaseFirestore.instance
                     .collection('products')
                     .doc(product.productId)
@@ -391,146 +366,192 @@ class _ProductDetailsState extends State<ProductDetails> {
               StreamBuilder<bool>(
                 initialData: false,
                 stream: addToCart.checkIfProductExists(
-                    product.productId, firebaseUser.uid),
+                    product.productId, firebaseUser!.uid),
                 builder: (context, snapshot) {
                   if (snapshot.hasData) {
                     bool? isExist = snapshot.data;
-                    log(isExist.toString());
-                    return Directionality(
-                      textDirection: TextDirection.rtl,
-                      child: ElevatedButton.icon(
-                        style: ElevatedButton.styleFrom(
-                          primary: Theme.of(context).primaryColor,
-                          elevation: 0,
-                          padding: const EdgeInsetsDirectional.fromSTEB(
-                              30, 10, 30, 10),
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(50),
-                          ),
-                        ),
-                        icon: Container(
-                          padding: const EdgeInsets.all(3),
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(50),
-                            color: Colors.white,
-                          ),
-                          child: Icon(
-                            Icons.chevron_left,
-                            color: Theme.of(context).primaryColor,
-                          ),
-                        ),
-                        label: (_loading)
-                            ? const Text(
-                                "...ADDING",
-                                style: TextStyle(
-                                  color: Colors.black54,
-                                ),
-                              )
-                            : Text(isExist! ? "CHECKOUT" : "ADD TO CART"),
-                        onPressed: (isExist!)
-                            ? () {
-                                Navigator.pushNamed(
-                                  context,
-                                  '/select-payment',
-                                );
-                              }
-                            : () {
-                                // ignore: unnecessary_null_comparison
-                                if (firebaseUser == null) {
-                                  showModalBottomSheet(
-                                    shape: const RoundedRectangleBorder(
-                                      //the rounded corner is created here
-                                      borderRadius: BorderRadius.only(
-                                        topLeft: Radius.circular(20),
-                                        topRight: Radius.circular(20),
-                                      ),
+                    log("isExist " + isExist.toString());
+                    return StreamBuilder<bool>(
+                      initialData: true,
+                      stream: addToCart.isCartEmpty(firebaseUser.uid),
+                      builder: (context, snapshot) {
+                        bool? isEmpty = snapshot.data;
+                        log("isEmpt " + isEmpty.toString());
+                        return Directionality(
+                          textDirection: TextDirection.rtl,
+                          child: ElevatedButton.icon(
+                            style: ElevatedButton.styleFrom(
+                              primary: Theme.of(context).primaryColor,
+                              elevation: 0,
+                              padding: const EdgeInsetsDirectional.fromSTEB(
+                                  30, 10, 30, 10),
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(50),
+                              ),
+                            ),
+                            icon: Container(
+                              padding: const EdgeInsets.all(3),
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(50),
+                                color: Colors.white,
+                              ),
+                              child: Icon(
+                                Icons.chevron_left,
+                                color: Theme.of(context).primaryColor,
+                              ),
+                            ),
+                            label: (_loading)
+                                ? const Text(
+                                    "...ADDING",
+                                    style: TextStyle(
+                                      color: Colors.black54,
                                     ),
-                                    context: context,
-                                    builder: (context) {
-                                      return const SignInSheet();
-                                    },
-                                  );
-                                } else {
-                                  // if the current product is not in cart
-                                  // or the cart is not empty
-                                  if (!isExist) {
-                                    showDialog(
-                                      context: context,
-                                      builder: (context) {
-                                        return AlertDialog(
-                                          content: const Text(
-                                            "Your cart already contains products. \n\nDo you want to discard them and add this to cart?",
-                                          ),
-                                          actions: [
-                                            TextButton(
-                                              onPressed: () {
-                                                Navigator.pop(context);
-                                              },
-                                              child: Text(
-                                                "CANCEL",
-                                                style: TextStyle(
-                                                  color: Theme.of(context)
-                                                      .primaryColor,
-                                                ),
-                                              ),
-                                            ),
-                                            TextButton(
-                                              onPressed: () {
-                                                Navigator.pop(context);
-                                                try {
-                                                  // set _loading to true
-                                                  setState(() {
-                                                    _loading = true;
-                                                  });
-                                                  // add to cart
-                                                  addToCart
-                                                      .clearCart(
-                                                          firebaseUser.uid)
-                                                      ?.then((value) {
-                                                    addToCart
-                                                        .addToCart(
-                                                      product.productId,
-                                                      product.name,
-                                                      product.price,
-                                                      product.supplierId,
-                                                      firebaseUser.uid,
-                                                      product.imageUrl,
-                                                    )
-                                                        .then((value) {
-                                                      // set _loading to false
-                                                      setState(() {
-                                                        _loading = false;
-                                                      });
-                                                    });
-                                                  });
-                                                } catch (e) {
-                                                  ScaffoldMessenger.of(context)
-                                                      .showSnackBar(
-                                                    const SnackBar(
-                                                      behavior: SnackBarBehavior
-                                                          .floating,
-                                                      content: Text(
-                                                          "Something went wrong please try later."),
-                                                    ),
-                                                  );
-                                                }
-                                              },
-                                              child: Text(
-                                                "YES",
-                                                style: TextStyle(
-                                                  color: Theme.of(context)
-                                                      .primaryColor,
-                                                ),
-                                              ),
-                                            ),
-                                          ],
-                                        );
-                                      },
+                                  )
+                                : Text(isExist! ? "CHECKOUT" : "ADD TO CART"),
+                            onPressed: (isExist!)
+                                ? () {
+                                    Navigator.pushNamed(
+                                      context,
+                                      '/select-payment',
                                     );
                                   }
-                                }
-                              },
-                      ),
+                                : () {
+                                    // ignore: unnecessary_null_comparison
+                                    if (firebaseUser == null) {
+                                      showModalBottomSheet(
+                                        shape: const RoundedRectangleBorder(
+                                          //the rounded corner is created here
+                                          borderRadius: BorderRadius.only(
+                                            topLeft: Radius.circular(20),
+                                            topRight: Radius.circular(20),
+                                          ),
+                                        ),
+                                        context: context,
+                                        builder: (context) {
+                                          return const SignInSheet();
+                                        },
+                                      );
+                                    } else {
+                                      // if the current product is not in cart
+                                      // or the cart is not empty
+                                      if (!isEmpty!) {
+                                        // if the cart is not empty and the product is not in cart
+                                        showDialog(
+                                          context: context,
+                                          builder: (context) {
+                                            return AlertDialog(
+                                              content: const Text(
+                                                "Your cart already contains products. \n\nDo you want to discard them and add this to cart?",
+                                              ),
+                                              actions: [
+                                                TextButton(
+                                                  onPressed: () {
+                                                    Navigator.pop(context);
+                                                  },
+                                                  child: Text(
+                                                    "CANCEL",
+                                                    style: TextStyle(
+                                                      color: Theme.of(context)
+                                                          .primaryColor,
+                                                    ),
+                                                  ),
+                                                ),
+                                                TextButton(
+                                                  onPressed: () {
+                                                    Navigator.pop(context);
+                                                    try {
+                                                      // set _loading to true
+                                                      setState(() {
+                                                        _loading = true;
+                                                      });
+                                                      // add to cart
+                                                      addToCart
+                                                          .clearCart(
+                                                              firebaseUser.uid)
+                                                          ?.then((value) {
+                                                        addToCart
+                                                            .addToCart(
+                                                          product.productId,
+                                                          product.name,
+                                                          product.price,
+                                                          product.supplierId,
+                                                          firebaseUser.uid,
+                                                          product.imageUrl,
+                                                        )
+                                                            .then((value) {
+                                                          // set _loading to false
+                                                          setState(() {
+                                                            _loading = false;
+                                                          });
+                                                        });
+                                                      });
+                                                    } catch (e) {
+                                                      ScaffoldMessenger.of(
+                                                              context)
+                                                          .showSnackBar(
+                                                        const SnackBar(
+                                                          behavior:
+                                                              SnackBarBehavior
+                                                                  .floating,
+                                                          content: Text(
+                                                              "Something went wrong please try later."),
+                                                        ),
+                                                      );
+                                                    }
+                                                  },
+                                                  child: Text(
+                                                    "YES",
+                                                    style: TextStyle(
+                                                      color: Theme.of(context)
+                                                          .primaryColor,
+                                                    ),
+                                                  ),
+                                                ),
+                                              ],
+                                            );
+                                          },
+                                        );
+                                      } else {
+                                        log("You are here");
+                                        try {
+                                          // set _loading to true
+                                          setState(() {
+                                            _loading = true;
+                                          });
+                                          // add to cart
+                                          addToCart
+                                              .clearCart(firebaseUser.uid)
+                                              ?.then((value) {
+                                            addToCart
+                                                .addToCart(
+                                              product.productId,
+                                              product.name,
+                                              product.price,
+                                              product.supplierId,
+                                              firebaseUser.uid,
+                                              product.imageUrl,
+                                            )
+                                                .then((value) {
+                                              // set _loading to false
+                                              setState(() {
+                                                _loading = false;
+                                              });
+                                            });
+                                          });
+                                        } catch (e) {
+                                          ScaffoldMessenger.of(context)
+                                              .showSnackBar(const SnackBar(
+                                            behavior: SnackBarBehavior.floating,
+                                            content: Text(
+                                                "Something went wrong please try later."),
+                                          ));
+                                        }
+                                      }
+                                    }
+                                  },
+                          ),
+                        );
+                      },
                     );
                   }
                   return Container();
