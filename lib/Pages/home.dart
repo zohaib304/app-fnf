@@ -1,5 +1,6 @@
 import 'package:android_app_fnf/Models/product_argumets.dart';
 import 'package:android_app_fnf/Widgets/carousel_slider_main.dart';
+import 'package:android_app_fnf/Widgets/help_widget.dart';
 import 'package:android_app_fnf/Widgets/sign_in_sheet.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:carousel_slider/carousel_slider.dart';
@@ -139,56 +140,58 @@ class Home extends StatelessWidget {
           )
         ],
       ),
-      body: SingleChildScrollView(
-        child: Column(
-          children: [
-            const SizedBox(height: 10),
-            CarouselSliderMain(),
-            const SizedBox(height: 10),
-            const Divider(),
-            // filter icon and dropdown
-            GestureDetector(
-              onTap: () {
-                Navigator.pushNamed(context, '/help');
-              },
-              child: Container(
-                margin: const EdgeInsets.symmetric(horizontal: 10),
-                padding: const EdgeInsets.symmetric(horizontal: 20),
-                decoration: BoxDecoration(
-                  color: Colors.red[100],
-                  borderRadius: BorderRadius.circular(50),
-                ),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    const Text(
-                      "Learn How To Earn Money?",
-                      style: TextStyle(
-                        // fontSize: 18,
-                        fontWeight: FontWeight.w600,
-                      ),
+      body: CustomScrollView(
+        slivers: [
+          SliverToBoxAdapter(
+            child: CarouselSliderMain(),
+          ),
+          const SliverToBoxAdapter(child: SizedBox(height: 10)),
+          const SliverToBoxAdapter(
+            child: HelpWidget(),
+          ),
+          const SliverToBoxAdapter(child: SizedBox(height: 10)),
+          SliverAppBar(
+            backgroundColor: const Color(0xffFCFAFA),
+            floating: true,
+            pinned: true,
+            flexibleSpace: FlexibleSpaceBar(
+              titlePadding: EdgeInsets.zero,
+              title: ButtonBar(
+                alignment: MainAxisAlignment.start,
+                children: [
+                  TextButton(
+                    child: const Text(
+                      'Order By',
+                      style: TextStyle(color: Colors.black),
                     ),
-                    Chip(
-                      label: const Text("Learn More"),
-                      labelStyle: const TextStyle(
-                        color: Colors.white,
-                      ),
-                      backgroundColor: Theme.of(context).primaryColor,
-                    )
-                  ],
-                ),
+                    onPressed: () {},
+                  ),
+                  const VerticalDivider(
+                    color: Colors.black26,
+                  ),
+                  TextButton(
+                    child: const Text(
+                      'Categories',
+                      style: TextStyle(color: Colors.black),
+                    ),
+                    onPressed: () {},
+                  ),
+                  const VerticalDivider(
+                    color: Colors.black26,
+                  ),
+                  TextButton(
+                    child: const Text(
+                      'Button',
+                      style: TextStyle(color: Colors.black),
+                    ),
+                    onPressed: () {},
+                  ),
+                ],
               ),
             ),
-            const SizedBox(height: 10),
-            Container(
-              width: MediaQuery.of(context).size.width,
-              padding: const EdgeInsets.all(10),
-              color: Colors.black12,
-              child: const Text("Filter be add here."), // TODO:
-            ),
-
-            const SizedBox(height: 10),
-            PaginateFirestore(
+          ),
+          SliverToBoxAdapter(
+            child: PaginateFirestore(
               onEmpty: const Text("Something went wrong."),
               initialLoader: SizedBox(
                 width: 20,
@@ -340,8 +343,8 @@ class Home extends StatelessWidget {
               // to fetch real-time data
               isLive: true,
             ),
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }
