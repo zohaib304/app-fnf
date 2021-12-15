@@ -142,6 +142,7 @@ class Home extends StatelessWidget {
       ),
       body: CustomScrollView(
         slivers: [
+          const SliverToBoxAdapter(child: SizedBox(height: 10)),
           SliverToBoxAdapter(
             child: CarouselSliderMain(),
           ),
