@@ -51,6 +51,9 @@ class MyApp extends StatelessWidget {
         ChangeNotifierProvider(
           create: (context) => Order(),
         ),
+        ChangeNotifierProvider(
+          create: (context) => Order(),
+        ),
       ],
       child: MaterialApp(
         debugShowCheckedModeBanner: false,

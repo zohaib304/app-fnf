@@ -1,5 +1,6 @@
 import 'dart:developer';
 
+import 'package:android_app_fnf/Models/place_order.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -50,6 +51,30 @@ class Order with ChangeNotifier {
       } on FirebaseException catch (e) {
         log(e.message.toString());
       }
+    });
+  }
+
+  // write a function to get all the orders of a particular user and return a stream of the orders
+  Stream<List<PlaceOrder>> getPendingOrders(String userId) {
+    return FirebaseFirestore.instance
+        .collection('orders')
+        .where('userId', isEqualTo: userId)
+        .where('status', isEqualTo: 'pending')
+        .snapshots()
+        .map((querySnapshot) {
+      return querySnapshot.docs.map((doc) {
+        log(doc.id);
+        return PlaceOrder(
+          productId: doc.data()['productId'],
+          productName: doc.data()['productName'],
+          customerName: doc.data()['customerName'],
+          productImage: doc.data()['image'],
+          productPrice: doc.data()['productPrice'],
+          productQuantity: doc.data()['quantity'],
+          paymentMethod: doc.data()['paymentMethod'],
+          status: doc.data()['status'],
+        );
+      }).toList();
     });
   }
 }
