@@ -524,7 +524,6 @@ class _ProductDetailsState extends State<ProductDetails> {
                                           },
                                         );
                                       } else {
-                                        log("You are here");
                                         try {
                                           // set _loading to true
                                           setState(() {

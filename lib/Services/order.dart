@@ -8,6 +8,7 @@ class Order with ChangeNotifier {
   // write a function take userId, supplierId and list as argument and add the order to the firebase collection
 
   Future<void> addOrder(
+    String userId,
     String customerName,
     String address,
     String city,
@@ -17,16 +18,17 @@ class Order with ChangeNotifier {
     String cartId,
     String paymentMethod,
   ) async {
-    // log(cartId);
+    log(cartId);
     await FirebaseFirestore.instance
         .collection('cart')
         .doc(cartId)
         .get()
         .then((value) {
-      log(value.data().toString());
+      log(value.data()!['productId']);
+      log(paymentMethod);
       try {
         FirebaseFirestore.instance.collection('orders').doc().set({
-          'cartId': value.id,
+          'userId': userId,
           'customerName': customerName,
           'address': address,
           'city': city,
@@ -35,6 +37,7 @@ class Order with ChangeNotifier {
           'phone': phone,
           'status': 'pending',
           'paymentMethod': paymentMethod,
+          'productId': value.data()!['productId'],
           'productPrice': value.data()!['price'] * value.data()!['quantity'],
           'productName': value.data()!['name'],
           'quantity': value.data()!['quantity'],

@@ -35,11 +35,12 @@ class _SelectPaymentState extends State<SelectPayment> {
   String _zip = '';
   bool _placeOrder = false;
   bool isLoading = false;
-  String paymentMethod = '';
+  String payMethod = '';
 
   PaymentMethod? _paymentMethod = PaymentMethod.cashOnDelivery;
   @override
   Widget build(BuildContext context) {
+    log(payMethod);
     final addressList = Provider.of<AddNewAddress>(context);
     final firebaseUser = context.watch<User?>();
     final cart = Provider.of<Cart>(context);
@@ -104,6 +105,7 @@ class _SelectPaymentState extends State<SelectPayment> {
                               });
                               cart.getDocIds(firebaseUser!.uid).then((_) {
                                 placeOrder.addOrder(
+                                  firebaseUser.uid,
                                   _customerName,
                                   _address,
                                   _city,
@@ -111,7 +113,7 @@ class _SelectPaymentState extends State<SelectPayment> {
                                   _zip,
                                   _phone,
                                   cart.cartIds[0],
-                                  paymentMethod,
+                                  payMethod,
                                 );
                               }).then((value) {
                                 Navigator.pushNamed(
@@ -150,7 +152,7 @@ class _SelectPaymentState extends State<SelectPayment> {
                     onChanged: (PaymentMethod? value) {
                       setState(() {
                         _paymentMethod = value;
-                        paymentMethod = "Cash on Delivery";
+                        payMethod = "Cash on Delivery";
                       });
                     },
                   ),
@@ -166,7 +168,7 @@ class _SelectPaymentState extends State<SelectPayment> {
                     onChanged: (PaymentMethod? value) {
                       setState(() {
                         _paymentMethod = value;
-                        paymentMethod = "Card";
+                        payMethod = "Card";
                       });
                     },
                   ),
