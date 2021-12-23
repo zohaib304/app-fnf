@@ -9,15 +9,25 @@ class ViewOrders extends StatelessWidget {
       length: 3,
       child: Scaffold(
         appBar: AppBar(
+          backgroundColor: Colors.white,
+          titleTextStyle: const TextStyle(
+            color: Colors.black87,
+            fontSize: 20,
+            fontWeight: FontWeight.bold,
+          ),
           elevation: 0,
           title: const Text('Orders'),
-          bottom: const TabBar(
-            unselectedLabelStyle: TextStyle(
-              fontSize: 12,
-              fontWeight: FontWeight.w400,
+          bottom: TabBar(
+            indicatorColor: Theme.of(context).primaryColor,
+            labelColor: Colors.black87,
+            labelStyle: const TextStyle(
+              fontSize: 18,
+              fontWeight: FontWeight.bold,
+            ),
+            unselectedLabelStyle: const TextStyle(
               color: Colors.black38,
             ),
-            tabs: [
+            tabs: const [
               Tab(
                 text: 'Pending',
               ),
