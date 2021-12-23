@@ -5,6 +5,7 @@ import 'package:android_app_fnf/Widgets/sign_in_sheet.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -27,6 +28,12 @@ class _ProductDetailsState extends State<ProductDetails> {
   bool _loading = false;
 
   @override
+  void initState() {
+    FirebaseAnalytics.instance.logEvent(name: 'product_detail_view');
+    super.initState();
+  }
+
+  @override
   Widget build(BuildContext context) {
     final product =
         ModalRoute.of(context)!.settings.arguments as ProductArguments;
@@ -41,7 +48,12 @@ class _ProductDetailsState extends State<ProductDetails> {
         actions: [
           IconButton(
             icon: const Icon(Icons.search),
-            onPressed: () {},
+            onPressed: () async {
+              await FirebaseAnalytics.instance.logEvent(
+                name: 'product_detail_search',
+                parameters: {'product_id': product.productId},
+              );
+            },
           ),
           Stack(
             children: [
