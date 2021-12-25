@@ -22,29 +22,20 @@ class _PendingOrdersState extends State<PendingOrders>
     super.build(context);
     return RefreshIndicator(
       onRefresh: () async {
-        getOrders.getPendingOrders(firebaseUser!.uid);
+        getOrders.getOrders(firebaseUser!.uid);
       },
       child: PaginateFirestore(
         //item builder type is compulsory.
         itemBuilder: (context, documentSnapshots, index) {
           final data = documentSnapshots[index].data() as Map?;
           return Container(
-            margin: const EdgeInsets.only(top: 10, left: 10, right: 10),
+            margin: const EdgeInsets.only(top: 8),
             padding: const EdgeInsets.all(10),
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(8),
+            decoration: const BoxDecoration(
               color: Colors.white,
-              boxShadow: [
-                BoxShadow(
-                  color: Colors.grey.withOpacity(0.2),
-                  spreadRadius: 1,
-                  blurRadius: 1,
-                  offset: const Offset(1, 1), // changes position of shadow
-                ),
-              ],
             ),
             child: Row(
-              crossAxisAlignment: CrossAxisAlignment.start,
+              // crossAxisAlignment: CrossAxisAlignment.end,
               children: [
                 Container(
                   height: 100,
@@ -69,7 +60,7 @@ class _PendingOrdersState extends State<PendingOrders>
                         data['productName'],
                         maxLines: 2,
                         style: const TextStyle(
-                          fontSize: 16,
+                          fontSize: 18,
                           fontWeight: FontWeight.w500,
                         ),
                       ),
@@ -81,13 +72,19 @@ class _PendingOrdersState extends State<PendingOrders>
                           fontWeight: FontWeight.w500,
                         ),
                       ),
-                      const SizedBox(height: 10),
                       Text(
                         'Quantity: ' + data['quantity'].toString(),
                       ),
                     ],
                   ),
-                )
+                ),
+                TextButton(
+                  style: TextButton.styleFrom(
+                    primary: Theme.of(context).primaryColor,
+                  ),
+                  onPressed: () {},
+                  child: const Text("View Order"),
+                ),
               ],
             ),
           );

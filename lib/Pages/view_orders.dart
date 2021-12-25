@@ -18,7 +18,7 @@ class ViewOrders extends StatelessWidget {
             fontWeight: FontWeight.bold,
           ),
           elevation: 0,
-          title: const Text('Orders'),
+          title: const Text('My Orders'),
           bottom: TabBar(
             indicatorColor: Theme.of(context).primaryColor,
             labelColor: Colors.black87,

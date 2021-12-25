@@ -44,7 +44,9 @@ class Order with ChangeNotifier {
           'quantity': value.data()!['quantity'],
           'supplierId': value.data()!['supplierId'],
           'image': value.data()!['image'],
+          'date': DateTime.now(),
         }).then((value) => {
+              log("Order Placed"),
               // clear cart after order is placed
               FirebaseFirestore.instance.collection('cart').doc(cartId).delete()
             });
@@ -55,7 +57,7 @@ class Order with ChangeNotifier {
   }
 
   // write a function to get all the orders of a particular user and return a stream of the orders
-  Stream<List<PlaceOrder>> getPendingOrders(String userId) {
+  Stream<List<PlaceOrder>> getOrders(String userId) {
     return FirebaseFirestore.instance
         .collection('orders')
         .where('userId', isEqualTo: userId)

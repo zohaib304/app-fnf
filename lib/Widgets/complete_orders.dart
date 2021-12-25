@@ -24,7 +24,7 @@ class _CompleteOrdersState extends State<CompleteOrders>
     super.build(context);
     return RefreshIndicator(
       onRefresh: () async {
-        getOrders.getPendingOrders(firebaseUser!.uid);
+        getOrders.getOrders(firebaseUser!.uid);
         log("refress");
       },
       child: PaginateFirestore(
@@ -37,14 +37,6 @@ class _CompleteOrdersState extends State<CompleteOrders>
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(8),
               color: Colors.white,
-              boxShadow: [
-                BoxShadow(
-                  color: Colors.grey.withOpacity(0.2),
-                  spreadRadius: 1,
-                  blurRadius: 1,
-                  offset: const Offset(1, 1), // changes position of shadow
-                ),
-              ],
             ),
             child: Row(
               crossAxisAlignment: CrossAxisAlignment.start,
