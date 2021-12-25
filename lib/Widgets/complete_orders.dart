@@ -28,6 +28,9 @@ class _CompleteOrdersState extends State<CompleteOrders>
         log("refress");
       },
       child: PaginateFirestore(
+        onEmpty: const Center(
+          child: Text("No orders"),
+        ),
         //item builder type is compulsory.
         itemBuilder: (context, documentSnapshots, index) {
           final data = documentSnapshots[index].data() as Map?;

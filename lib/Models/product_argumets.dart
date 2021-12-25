@@ -3,6 +3,7 @@ class ProductArguments {
   final String name;
   final double price;
   final String supplierId;
+  final String shopName;
   final String imageUrl;
 
   ProductArguments(
@@ -11,5 +12,6 @@ class ProductArguments {
     this.price,
     this.supplierId,
     this.imageUrl,
+    this.shopName,
   );
 }

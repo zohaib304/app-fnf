@@ -225,6 +225,7 @@ class Home extends StatelessWidget {
                         double.parse(data["price"]),
                         data["supplier_id"],
                         data['image'][0],
+                        data['shopName'],
                       ),
                     );
                   },

@@ -277,33 +277,42 @@ class _ProductDetailsState extends State<ProductDetails> {
                                 horizontal: 20.0, vertical: 10.0),
                             width: double.infinity,
                             color: Colors.white,
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
-                                const Text(
-                                  "Sold By",
-                                  style: TextStyle(
-                                    fontSize: 12,
-                                    color: Colors.black87,
-                                  ),
-                                ),
-                                const SizedBox(height: 5),
-                                const Text(
-                                  "shopName",
-                                  style: TextStyle(
-                                    fontSize: 18,
-                                    color: Colors.black87,
-                                  ),
-                                ),
-                                const SizedBox(
-                                  height: 10,
+                                Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    const Text(
+                                      "Sold By",
+                                      style: TextStyle(
+                                        fontSize: 12,
+                                        color: Colors.black87,
+                                      ),
+                                    ),
+                                    const SizedBox(height: 5),
+                                    Text(
+                                      product['shopName'],
+                                      style: const TextStyle(
+                                        fontSize: 18,
+                                        color: Colors.black87,
+                                        fontWeight: FontWeight.bold,
+                                      ),
+                                    ),
+                                  ],
                                 ),
                                 OutlinedButton(
                                   style: OutlinedButton.styleFrom(
                                     primary: Theme.of(context).primaryColor,
                                   ),
                                   onPressed: () {
-                                    // TODO:
+                                    ScaffoldMessenger.of(context).showSnackBar(
+                                      SnackBar(
+                                        content: Text(
+                                          product['supplier_id'],
+                                        ),
+                                      ),
+                                    );
                                   },
                                   child: const Text(
                                     "GO TO STORE",

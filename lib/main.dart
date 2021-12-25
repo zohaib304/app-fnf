@@ -3,6 +3,7 @@ import 'package:android_app_fnf/Pages/help.dart';
 import 'package:android_app_fnf/Pages/manage_account.dart';
 import 'package:android_app_fnf/Pages/new_address.dart';
 import 'package:android_app_fnf/Pages/order_confirmed.dart';
+import 'package:android_app_fnf/Pages/order_details.dart';
 import 'package:android_app_fnf/Pages/product_details.dart';
 import 'package:android_app_fnf/Pages/profile.dart';
 import 'package:android_app_fnf/Pages/select_payament.dart';
@@ -70,6 +71,7 @@ class MyApp extends StatelessWidget {
           NewAddress.routeName: (context) => NewAddress(),
           OrderConfirmed.routeName: (context) => const OrderConfirmed(),
           Help.routeName: (context) => const Help(),
+          OrderDetails.routeName: (context) => const OrderDetails(),
         },
       ),
     );

@@ -1,3 +1,4 @@
+import 'package:android_app_fnf/Models/order_details_arguments.dart';
 import 'package:android_app_fnf/Services/order.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -82,7 +83,22 @@ class _PendingOrdersState extends State<PendingOrders>
                   style: TextButton.styleFrom(
                     primary: Theme.of(context).primaryColor,
                   ),
-                  onPressed: () {},
+                  onPressed: () {
+                    Navigator.pushNamed(context, '/order-details',
+                        arguments: OrderDetailsArguments(
+                          data['productId'],
+                          data['productName'],
+                          data['productPrice'],
+                          data['supplierId'],
+                          data['image'],
+                          data['address'],
+                          data['city'],
+                          data['state'],
+                          data['phone'],
+                          data['quantity'],
+                          data['paymentMethod'],
+                        ));
+                  },
                   child: const Text("View Order"),
                 ),
               ],
