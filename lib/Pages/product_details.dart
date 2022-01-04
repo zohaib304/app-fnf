@@ -1,4 +1,3 @@
-import 'dart:developer';
 import 'package:android_app_fnf/Models/product_argumets.dart';
 import 'package:android_app_fnf/Services/cart.dart';
 import 'package:android_app_fnf/Widgets/sign_in_sheet.dart';
@@ -55,68 +54,33 @@ class _ProductDetailsState extends State<ProductDetails> {
               );
             },
           ),
-          Stack(
-            children: [
-              Positioned(
-                child: IconButton(
-                  icon: Icon(
-                    Icons.shopping_cart_outlined,
-                    color: Colors.grey[600],
+          IconButton(
+            icon: Icon(
+              Icons.shopping_cart_outlined,
+              color: Colors.grey[600],
+            ),
+            onPressed: () {
+              if (firebaseUser == null) {
+                showModalBottomSheet(
+                  shape: const RoundedRectangleBorder(
+                    //the rounded corner is created here
+                    borderRadius: BorderRadius.only(
+                      topLeft: Radius.circular(20),
+                      topRight: Radius.circular(20),
+                    ),
                   ),
-                  onPressed: () {
-                    if (firebaseUser == null) {
-                      showModalBottomSheet(
-                        shape: const RoundedRectangleBorder(
-                          //the rounded corner is created here
-                          borderRadius: BorderRadius.only(
-                            topLeft: Radius.circular(20),
-                            topRight: Radius.circular(20),
-                          ),
-                        ),
-                        context: context,
-                        builder: (context) {
-                          return const SignInSheet();
-                        },
-                      );
-                    } else {
-                      Navigator.pushNamed(
-                        context,
-                        '/select-payment',
-                      );
-                    }
+                  context: context,
+                  builder: (context) {
+                    return const SignInSheet();
                   },
-                ),
-              ),
-              // Positioned(
-              //   top: 10,
-              //   right: 10,
-              //   child: Container(
-              //     width: 15,
-              //     height: 15,
-              //     decoration: BoxDecoration(
-              //       color: Colors.red,
-              //       borderRadius: BorderRadius.circular(20),
-              //     ),
-              //     child: Center(
-              //       child: StreamBuilder(
-              //         stream: addToCart.getTotalQuantity(firebaseUser!.uid),
-              //         builder: (context, snapshot) {
-              //           if (snapshot.hasData) {
-              //             return Text(
-              //               snapshot.data.toString(),
-              //               style: const TextStyle(
-              //                 color: Colors.white,
-              //                 fontSize: 10,
-              //               ),
-              //             );
-              //           }
-              //           return Container();
-              //         },
-              //       ),
-              //     ),
-              //   ),
-              // ),
-            ],
+                );
+              } else {
+                Navigator.pushNamed(
+                  context,
+                  '/select-payment',
+                );
+              }
+            },
           )
         ],
       ),
@@ -391,13 +355,11 @@ class _ProductDetailsState extends State<ProductDetails> {
                 builder: (context, snapshot) {
                   if (snapshot.hasData) {
                     bool? isExist = snapshot.data;
-                    log("isExist " + isExist.toString());
                     return StreamBuilder<bool>(
                       initialData: true,
                       stream: addToCart.isCartEmpty(firebaseUser.uid),
                       builder: (context, snapshot) {
                         bool? isEmpty = snapshot.data;
-                        log("isEmpt " + isEmpty.toString());
                         return Directionality(
                           textDirection: TextDirection.rtl,
                           child: ElevatedButton.icon(

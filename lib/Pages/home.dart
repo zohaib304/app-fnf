@@ -70,73 +70,30 @@ class Home extends StatelessWidget {
               ),
             ],
           ),
-          Stack(
-            children: [
-              Positioned(
-                child: IconButton(
-                  icon: Icon(
-                    Icons.shopping_cart_outlined,
-                    color: Colors.grey[600],
+          IconButton(
+            icon: Icon(
+              Icons.shopping_cart_outlined,
+              color: Colors.grey[600],
+            ),
+            onPressed: () {
+              if (firebaseUser == null) {
+                showModalBottomSheet(
+                  shape: const RoundedRectangleBorder(
+                    //the rounded corner is created here
+                    borderRadius: BorderRadius.only(
+                      topLeft: Radius.circular(20),
+                      topRight: Radius.circular(20),
+                    ),
                   ),
-                  onPressed: () {
-                    if (firebaseUser == null) {
-                      showModalBottomSheet(
-                        shape: const RoundedRectangleBorder(
-                          //the rounded corner is created here
-                          borderRadius: BorderRadius.only(
-                            topLeft: Radius.circular(20),
-                            topRight: Radius.circular(20),
-                          ),
-                        ),
-                        context: context,
-                        builder: (context) {
-                          return const SignInSheet();
-                        },
-                      );
-                    } else {
-                      Navigator.pushNamed(context, '/select-payment');
-                    }
+                  context: context,
+                  builder: (context) {
+                    return const SignInSheet();
                   },
-                ),
-              ),
-              // Positioned(
-              //   top: 10,
-              //   right: 10,
-              //   child: Container(
-              //     width: 15,
-              //     height: 15,
-              //     decoration: BoxDecoration(
-              //       color: Colors.red,
-              //       borderRadius: BorderRadius.circular(20),
-              //     ),
-              //     child: Center(
-              //       // TODO : stream through an error fix it
-              //       child: StreamBuilder(
-              //         initialData: '',
-              //         stream: cart.getTotalQuantity(firebaseUser!.uid),
-              //         builder: (context, snapshot) {
-              //           if (snapshot.hasData) {
-              //             return Text(
-              //               snapshot.data.toString(),
-              //               style: const TextStyle(
-              //                 color: Colors.white,
-              //                 fontSize: 10,
-              //               ),
-              //             );
-              //           }
-              //           if (snapshot.connectionState ==
-              //               ConnectionState.waiting) {
-              //             return const Center(
-              //               child: CircularProgressIndicator(),
-              //             );
-              //           }
-              //           return Container();
-              //         },
-              //       ),
-              //     ),
-              //   ),
-              // ),
-            ],
+                );
+              } else {
+                Navigator.pushNamed(context, '/select-payment');
+              }
+            },
           )
         ],
       ),
@@ -165,7 +122,9 @@ class Home extends StatelessWidget {
                       'Order By',
                       style: TextStyle(color: Colors.black),
                     ),
-                    onPressed: () {},
+                    onPressed: () {
+                      // TODO:
+                    },
                   ),
                   const VerticalDivider(
                     color: Colors.black26,
@@ -341,7 +300,7 @@ class Home extends StatelessWidget {
               // orderBy is compulsory to enable pagination
               query: FirebaseFirestore.instance
                   .collection('products')
-                  .orderBy('productName'),
+                  .orderBy('timestamp', descending: true),
               // to fetch real-time data
               isLive: true,
             ),
