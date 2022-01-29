@@ -40,7 +40,7 @@ class _SelectPaymentState extends State<SelectPayment> {
   PaymentMethod? _paymentMethod = PaymentMethod.cashOnDelivery;
   @override
   Widget build(BuildContext context) {
-    log(payMethod);
+    // log(payMethod);
     final addressList = Provider.of<AddNewAddress>(context);
     final firebaseUser = context.watch<User?>();
     final cart = Provider.of<Cart>(context);
@@ -73,7 +73,7 @@ class _SelectPaymentState extends State<SelectPayment> {
           onStepContinue: () {
             final isLastStep = _index == 2;
             if (isLastStep) {
-              log("Completed");
+              // log("Completed");
             } else {
               setState(() {
                 _index += 1;
@@ -484,7 +484,7 @@ class _SelectPaymentState extends State<SelectPayment> {
                               _zip = address[index].zipCode;
                               _state = address[index].state;
                             });
-                            log(_selectedAddress);
+                            // log(_selectedAddress);
                           },
                           title: Text(address[index].customerName),
                           subtitle: Text(

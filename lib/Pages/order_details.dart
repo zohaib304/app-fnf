@@ -56,7 +56,16 @@ class OrderDetails extends StatelessWidget {
                       ),
                     ),
                     const SizedBox(height: 8),
-                    Text("Quantity: " + orderdetails.quantity.toString()),
+                    Text(
+                      "Quantity: " + orderdetails.quantity.toString(),
+                    ),
+                    const SizedBox(height: 15),
+                    Text(
+                      "Total: " + orderdetails.price.toString(),
+                      style: const TextStyle(
+                        fontSize: 20,
+                      ),
+                    ),
                   ],
                 )
               ],
@@ -163,7 +172,7 @@ class OrderDetails extends StatelessWidget {
                     primary: Theme.of(context).primaryColor,
                   ),
                   onPressed: () {},
-                  child: Text("Visit Help Center"),
+                  child: const Text("Visit Help Center"),
                 ),
               ],
             )

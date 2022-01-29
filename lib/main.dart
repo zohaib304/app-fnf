@@ -1,3 +1,4 @@
+import 'package:android_app_fnf/Models/order_by.dart';
 import 'package:android_app_fnf/Pages/categories.dart';
 import 'package:android_app_fnf/Pages/help.dart';
 import 'package:android_app_fnf/Pages/manage_account.dart';
@@ -54,6 +55,9 @@ class MyApp extends StatelessWidget {
         ),
         ChangeNotifierProvider(
           create: (context) => Order(),
+        ),
+        ChangeNotifierProvider(
+          create: (context) => OrderBy(),
         ),
       ],
       child: MaterialApp(

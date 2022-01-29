@@ -1,3 +1,4 @@
+import 'package:android_app_fnf/Models/order_by.dart';
 import 'package:android_app_fnf/Models/product_argumets.dart';
 import 'package:android_app_fnf/Widgets/carousel_slider_main.dart';
 import 'package:android_app_fnf/Widgets/help_widget.dart';
@@ -17,6 +18,7 @@ class Home extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final firebaseUser = context.watch<User?>();
+    final orderBy = Provider.of<OrderBy>(context);
     return Scaffold(
       backgroundColor: const Color(0xffF5F6F8),
       appBar: AppBar(
@@ -123,7 +125,25 @@ class Home extends StatelessWidget {
                       style: TextStyle(color: Colors.black),
                     ),
                     onPressed: () {
-                      // TODO:
+                      showModalBottomSheet(
+                          context: context,
+                          builder: (context) {
+                            return SizedBox(
+                              height: 200,
+                              child: ListView.builder(
+                                physics: const NeverScrollableScrollPhysics(),
+                                itemCount: 2,
+                                itemBuilder: (context, index) {
+                                  return RadioListTile<int>(
+                                    value: index,
+                                    groupValue: orderBy.selectedTile,
+                                    onChanged: orderBy.setSelectedTile,
+                                    title: Text("Text format ${index + 1}"),
+                                  );
+                                },
+                              ),
+                            );
+                          });
                     },
                   ),
                   const VerticalDivider(
