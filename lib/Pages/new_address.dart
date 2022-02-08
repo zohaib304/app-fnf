@@ -57,7 +57,10 @@ class NewAddress extends StatelessWidget {
                         if (value == null || value.isEmpty) {
                           return 'Please enter some text';
                         }
-                        _name = value;
+                        return null;
+                      },
+                      onSaved: (value) {
+                        _name = value!;
                       },
                     ),
                     const SizedBox(height: 15),
@@ -78,7 +81,10 @@ class NewAddress extends StatelessWidget {
                         if (value == null || value.isEmpty) {
                           return 'Please enter some text';
                         }
-                        _address = value;
+                        return null;
+                      },
+                      onSaved: (value) {
+                        _address = value!;
                       },
                     ),
                     const SizedBox(height: 15),
@@ -97,7 +103,10 @@ class NewAddress extends StatelessWidget {
                         if (value == null || value.isEmpty) {
                           return 'Please enter some text';
                         }
-                        _city = value;
+                        return null;
+                      },
+                      onSaved: (value) {
+                        _city = value!;
                       },
                     ),
                     const SizedBox(height: 15),
@@ -116,7 +125,10 @@ class NewAddress extends StatelessWidget {
                         if (value == null || value.isEmpty) {
                           return 'Please enter some text';
                         }
-                        _state = value;
+                        return null;
+                      },
+                      onSaved: (value) {
+                        _state = value!;
                       },
                     ),
                     const SizedBox(height: 15),
@@ -135,11 +147,15 @@ class NewAddress extends StatelessWidget {
                         if (value == null || value.isEmpty) {
                           return 'Please enter some text';
                         }
-                        _zip = value;
+                        return null;
+                      },
+                      onSaved: (value) {
+                        _zip = value!;
                       },
                     ),
                     const SizedBox(height: 15),
                     TextFormField(
+                      keyboardType: TextInputType.phone,
                       decoration: const InputDecoration(
                         enabledBorder: OutlineInputBorder(),
                         focusedBorder: OutlineInputBorder(),
@@ -155,7 +171,10 @@ class NewAddress extends StatelessWidget {
                         if (value == null || value.isEmpty) {
                           return 'Please enter some text';
                         }
-                        _phone = value;
+                        return null;
+                      },
+                      onSaved: (value) {
+                        _phone = value!;
                       },
                     ),
                   ],
