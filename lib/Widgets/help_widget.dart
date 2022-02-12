@@ -13,13 +13,13 @@ class HelpWidget extends StatelessWidget {
         margin: const EdgeInsets.symmetric(horizontal: 10),
         padding: const EdgeInsets.symmetric(horizontal: 20),
         decoration: BoxDecoration(
-          color: Colors.red[100],
+          color: const Color(0xffDFF0FE),
           borderRadius: BorderRadius.circular(50),
         ),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            const Text(
+          children: const [
+            Text(
               "Learn How To Earn Money?",
               style: TextStyle(
                 // fontSize: 18,
@@ -27,11 +27,11 @@ class HelpWidget extends StatelessWidget {
               ),
             ),
             Chip(
-              label: const Text("Learn More"),
-              labelStyle: const TextStyle(
+              label: Text("Learn More"),
+              labelStyle: TextStyle(
                 color: Colors.white,
               ),
-              backgroundColor: Theme.of(context).primaryColor,
+              backgroundColor: Color(0xff00A6B9),
             )
           ],
         ),
