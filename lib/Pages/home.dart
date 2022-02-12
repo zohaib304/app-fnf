@@ -2,6 +2,7 @@ import 'package:android_app_fnf/Models/order_by.dart';
 import 'package:android_app_fnf/Models/product_argumets.dart';
 import 'package:android_app_fnf/Widgets/carousel_slider_main.dart';
 import 'package:android_app_fnf/Widgets/help_widget.dart';
+import 'package:android_app_fnf/Widgets/main_category.dart';
 import 'package:android_app_fnf/Widgets/sign_in_sheet.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:carousel_slider/carousel_slider.dart';
@@ -96,7 +97,7 @@ class Home extends StatelessWidget {
                 Navigator.pushNamed(context, '/select-payment');
               }
             },
-          )
+          ),
         ],
       ),
       body: CustomScrollView(
@@ -109,7 +110,24 @@ class Home extends StatelessWidget {
           const SliverToBoxAdapter(
             child: HelpWidget(),
           ),
-          const SliverToBoxAdapter(child: SizedBox(height: 10)),
+          const SliverToBoxAdapter(child: SizedBox(height: 20)),
+          const SliverPadding(
+            padding: EdgeInsets.symmetric(horizontal: 10),
+            sliver: SliverToBoxAdapter(
+              child: Text(
+                'Categories',
+                style: TextStyle(
+                  fontSize: 20,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+            ),
+          ),
+          const SliverToBoxAdapter(child: SizedBox(height: 20)),
+          const SliverToBoxAdapter(
+            child: MainCategory(),
+          ),
+          const SliverToBoxAdapter(child: SizedBox(height: 20)),
           SliverAppBar(
             backgroundColor: const Color(0xffFCFAFA),
             floating: true,
