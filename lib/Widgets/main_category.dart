@@ -16,7 +16,7 @@ class MainCategory extends StatelessWidget {
                 children: [
                   Image.asset('assets/icons/bracelet.png'),
                   const SizedBox(height: 5),
-                  const Text('Bags'),
+                  const Text('Bracelet'),
                 ],
               ),
             ),
@@ -26,7 +26,7 @@ class MainCategory extends StatelessWidget {
                 children: [
                   Image.asset('assets/icons/flipflop.png'),
                   const SizedBox(height: 5),
-                  const Text('Bags'),
+                  const Text('Flip Flop'),
                 ],
               ),
             ),
@@ -36,7 +36,7 @@ class MainCategory extends StatelessWidget {
                 children: [
                   Image.asset('assets/icons/scarf.png'),
                   const SizedBox(height: 5),
-                  const Text('Bags'),
+                  const Text('Scarf'),
                 ],
               ),
             ),
@@ -46,7 +46,7 @@ class MainCategory extends StatelessWidget {
                 children: [
                   Image.asset('assets/icons/swimming.png'),
                   const SizedBox(height: 5),
-                  const Text('Bags'),
+                  const Text('Swimming'),
                 ],
               ),
             ),
@@ -56,7 +56,7 @@ class MainCategory extends StatelessWidget {
                 children: [
                   Image.asset('assets/icons/tie.png'),
                   const SizedBox(height: 5),
-                  const Text('Bags'),
+                  const Text('Tie'),
                 ],
               ),
             ),
