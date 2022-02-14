@@ -207,7 +207,7 @@ class Home extends StatelessWidget {
               physics: const NeverScrollableScrollPhysics(),
               gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
                 crossAxisCount: 2,
-                childAspectRatio: 4 / 5.9,
+                childAspectRatio: 4 / 5.5,
               ),
               itemBuilder: (context, documentSnapshots, index) {
                 final data = documentSnapshots[index].data() as Map?;
@@ -270,6 +270,7 @@ class Home extends StatelessWidget {
                             children: [
                               Text(
                                 data['productName'],
+                                overflow: TextOverflow.fade,
                                 maxLines: 1,
                                 style: const TextStyle(
                                   fontSize: 12,
@@ -300,31 +301,6 @@ class Home extends StatelessWidget {
                                       size: 22,
                                     ),
                                   ),
-                                ],
-                              ),
-                              Row(
-                                children: [
-                                  Container(
-                                    padding: const EdgeInsets.symmetric(
-                                      horizontal: 8,
-                                      vertical: 2,
-                                    ),
-                                    decoration: BoxDecoration(
-                                      color: Colors.green,
-                                      borderRadius: BorderRadius.circular(10),
-                                    ),
-                                    child: const Text(
-                                      "4.8",
-                                      style: TextStyle(
-                                        fontSize: 12,
-                                        color: Colors.white,
-                                      ),
-                                    ),
-                                  ),
-                                  const SizedBox(
-                                    width: 2,
-                                  ),
-                                  const Text("Ratings"),
                                 ],
                               ),
                             ],
