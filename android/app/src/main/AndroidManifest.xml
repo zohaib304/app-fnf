@@ -2,7 +2,7 @@
     package="com.example.android_app_fnf">
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
    <application
-        android:label="android_app_fnf"
+        android:label="Byuu"
         android:icon="@mipmap/ic_launcher">
         <activity
             android:name=".MainActivity"
